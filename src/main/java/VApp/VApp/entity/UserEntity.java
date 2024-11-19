@@ -2,6 +2,7 @@ package VApp.VApp.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name ="users")
@@ -10,11 +11,15 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @NotEmpty
+    @NotNull
     @Column(unique = true)
     private String email;
     @NotEmpty
     private String password;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "accounts_id",referencedColumnName = "accountNumber")
+    private AccountEntity accountEntity;
 
     public int getId() {
         return id;

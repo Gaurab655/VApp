@@ -1,6 +1,7 @@
 package VApp.VApp.services;
 
 import VApp.VApp.entity.AccountEntity;
+import VApp.VApp.entity.UserEntity;
 import VApp.VApp.userRepository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,7 +22,6 @@ public class AccountServices {
             AccountEntity accountEntity1 = new AccountEntity();
             accountEntity1.setFullName(accountEntity.getFullName());
             accountEntity1.setBalance(accountEntity.getBalance());
-            accountEntity1.setEmail(accountEntity.getEmail());
             accountEntity1.setPin(accountEntity.getPin());
             AccountEntity saveAccounts=accountRepository.save(accountEntity1);
             return new ResponseEntity<>(saveAccounts, HttpStatus.CREATED);
