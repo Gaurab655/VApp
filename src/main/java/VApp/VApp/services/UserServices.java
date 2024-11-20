@@ -1,64 +1,23 @@
 package VApp.VApp.services;
 
 import VApp.VApp.dto.LoginUser;
-import VApp.VApp.dto.RegisterAndAccountDto;
-import VApp.VApp.entity.AccountEntity;
 import VApp.VApp.entity.UserEntity;
 import VApp.VApp.repository.AccountRepository;
 import VApp.VApp.repository.UserRepository;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import java.util.List;
-import java.util.Optional;
+
+import java.util.*;
 
 @Service
 public class UserServices {
+    private final Map<String,UserEntity> loggedeUsers = new HashMap<>();
     @Autowired
     private UserRepository userRepository;
     @Autowired
     private AccountRepository accountRepository;
-
-//    public ResponseEntity<UserDto> newUser(UserDto userDto) {
-//        try {
-//            UserEntity userEntity = new UserEntity();
-//            userEntity.setEmail(userDto.getEmail());
-//            userEntity.setPassword(userDto.getPassword());
-//            userRepository.save(userEntity);
-//            return new ResponseEntity<>(userDto, HttpStatus.CREATED);
-//
-//        } catch (Exception e) {
-//            System.out.println("unable to save " + e.getMessage());
-//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//        }
-//    }
-    public ResponseEntity<RegisterAndAccountDto> newUser(RegisterAndAccountDto registerAndAccountDto){
-        try {
-            UserEntity userEntity = new UserEntity();
-            userEntity.setEmail(registerAndAccountDto.getEmail());
-            userEntity.setPassword(registerAndAccountDto.getPassword());
-            UserEntity savedUser = userRepository.save(userEntity);
-
-            AccountEntity accountEntity = new AccountEntity();
-            accountEntity.setBalance(registerAndAccountDto.getBalance());
-            accountEntity.setFullName(registerAndAccountDto.getFullName());
-            accountEntity.setPin(registerAndAccountDto.getPin());
-
-            // Set bidirectional relationship
-            accountEntity.setUser(savedUser);
-            accountRepository.save(accountEntity);
-            // Set bidirectional relationship
-            userEntity.setAccountEntity(accountEntity);
-
-            return new ResponseEntity<>(HttpStatus.CREATED);
-
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-
-        }
-    }
 
     public List<UserEntity> getUsers() {
         return userRepository.findAll();
@@ -96,16 +55,27 @@ public class UserServices {
     }
 
     public ResponseEntity<?> login(LoginUser loginUser) {
-        Optional<UserEntity> userCheck = userRepository.findByEmail(loginUser.getEmail());
-        if (userCheck.isEmpty()) {
-            System.out.println("Email not found");
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } else {
+        try {
+            Optional<UserEntity> userCheck = userRepository.findByEmail(loginUser.getEmail());
+            if (userCheck.isEmpty()) {
+                System.out.println("Email not found");
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+            UserEntity user = userCheck.get();
             if (userCheck.get().getPassword().equals(loginUser.getPassword())){
                 System.out.println("user found");
-                return new ResponseEntity<>(loginUser,HttpStatus.FOUND);
+
+                String token = UUID.randomUUID().toString();
+                loggedeUsers.put(token, userCheck.get());
+
+                return new ResponseEntity<>(token,HttpStatus.FOUND);
+            }else {
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             }
-            return new ResponseEntity<>(HttpStatus.FOUND);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
+
+
     }
 }
