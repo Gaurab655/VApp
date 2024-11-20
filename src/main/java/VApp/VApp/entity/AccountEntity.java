@@ -21,7 +21,6 @@ public class AccountEntity {
     @Min(value = 1000,message = "pin must be 4 digits long")
     private int pin;
 
-
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private UserEntity user;
@@ -68,6 +67,4 @@ public class AccountEntity {
     public void setUser(UserEntity user) {
         this.user = user;
     }
-
-
 }
