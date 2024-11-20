@@ -10,18 +10,12 @@ public class RegisterAndAccountDto {
     private String email;
     @NotNull
     private String password;
-    private Long accountNumber;
-
-    public Long getAccountNumber() {
-        return accountNumber;
-    }
-
-    public void setAccountNumber(Long accountNumber) {
-        this.accountNumber = accountNumber;
-    }
-
-
-
+    @NotNull
+    private String fullName;
+    @NotNull
+    private double balance;
+    @NotNull
+    private int pin;
 
     public @NotNull String getEmail() {
         return email;
@@ -37,5 +31,31 @@ public class RegisterAndAccountDto {
 
     public void setPassword(@NotNull String password) {
         this.password = password;
+    }
+
+    @NotNull
+    public double getBalance() {
+        return balance;
+    }
+
+    public void setBalance(@NotNull double balance) {
+        this.balance = balance;
+    }
+
+    @NotNull
+    public int getPin() {
+        return pin;
+    }
+
+    public void setPin(@NotNull int pin) {
+        this.pin = pin;
+    }
+
+    public @NotNull String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(@NotNull String fullName) {
+        this.fullName = fullName;
     }
 }

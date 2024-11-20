@@ -1,8 +1,7 @@
 package VApp.VApp.services;
 
 import VApp.VApp.entity.AccountEntity;
-import VApp.VApp.entity.UserEntity;
-import VApp.VApp.userRepository.AccountRepository;
+import VApp.VApp.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
