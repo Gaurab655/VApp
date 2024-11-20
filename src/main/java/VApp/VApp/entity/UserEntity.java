@@ -17,8 +17,7 @@ public class UserEntity {
     @NotEmpty
     private String password;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "accounts_id",referencedColumnName = "accountNumber")
+    @OneToOne(mappedBy = "user",cascade = CascadeType.ALL)
     private AccountEntity accountEntity;
 
     public int getId() {
@@ -43,5 +42,13 @@ public class UserEntity {
 
     public void setPassword(@NotEmpty String password) {
         this.password = password;
+    }
+
+    public AccountEntity getAccountEntity() {
+        return accountEntity;
+    }
+
+    public void setAccountEntity(AccountEntity accountEntity) {
+        this.accountEntity = accountEntity;
     }
 }

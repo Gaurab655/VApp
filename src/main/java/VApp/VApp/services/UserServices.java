@@ -2,12 +2,10 @@ package VApp.VApp.services;
 
 import VApp.VApp.dto.LoginUser;
 import VApp.VApp.dto.RegisterAndAccountDto;
-import VApp.VApp.dto.UserDto;
 import VApp.VApp.entity.AccountEntity;
 import VApp.VApp.entity.UserEntity;
-import VApp.VApp.exception.BankException;
-import VApp.VApp.userRepository.AccountRepository;
-import VApp.VApp.userRepository.UserRepository;
+import VApp.VApp.repository.AccountRepository;
+import VApp.VApp.repository.UserRepository;
 import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -41,16 +39,23 @@ public class UserServices {
             UserEntity userEntity = new UserEntity();
             userEntity.setEmail(registerAndAccountDto.getEmail());
             userEntity.setPassword(registerAndAccountDto.getPassword());
-            userRepository.save(userEntity);
+            UserEntity savedUser = userRepository.save(userEntity);
 
             AccountEntity accountEntity = new AccountEntity();
+            accountEntity.setBalance(registerAndAccountDto.getBalance());
+            accountEntity.setFullName(registerAndAccountDto.getFullName());
+            accountEntity.setPin(registerAndAccountDto.getPin());
+            accountEntity.setUser(savedUser);
             accountRepository.save(accountEntity);
+
+            userEntity.setAccountEntity(accountEntity);
+
+
 
             return new ResponseEntity<>(HttpStatus.CREATED);
 
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-
         }
     }
 

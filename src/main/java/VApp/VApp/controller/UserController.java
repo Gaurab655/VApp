@@ -1,9 +1,8 @@
-package VApp.VApp.userController;
+package VApp.VApp.controller;
 
 import VApp.VApp.dto.LoginUser;
 import VApp.VApp.dto.RegisterAndAccountDto;
 import VApp.VApp.services.UserServices;
-import VApp.VApp.dto.UserDto;
 import VApp.VApp.entity.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

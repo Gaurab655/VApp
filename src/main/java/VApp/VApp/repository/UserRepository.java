@@ -1,4 +1,4 @@
-package VApp.VApp.userRepository;
+package VApp.VApp.repository;
 
 import VApp.VApp.entity.UserEntity;
 import jakarta.validation.constraints.NotEmpty;
