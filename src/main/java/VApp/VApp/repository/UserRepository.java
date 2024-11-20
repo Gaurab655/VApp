@@ -1,4 +1,4 @@
-package VApp.VApp.userRepository;
+package VApp.VApp.repository;
 
 import VApp.VApp.entity.UserEntity;
 import jakarta.validation.constraints.NotEmpty;
@@ -8,5 +8,5 @@ import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<UserEntity,Integer> {
 
-    Optional<?> findByEmail(@NotEmpty String email);
+    Optional<UserEntity> findByEmail(@NotEmpty String email);
 }

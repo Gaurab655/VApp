@@ -14,15 +14,22 @@ public class AccountEntity {
     private Long accountNumber;
     @NotNull
     private String fullName;
-    @NotEmpty
-    private Double Balance;
     @NotNull
-    @Column(unique = true)
-    private String email;
+    private Double balance;
     @NotEmpty
     @Max(value = 9999,message = "Pin must be 4 digits long ")
     @Min(value = 1000,message = "pin must be 4 digits long")
     private int pin;
+
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
+
+
+    public @NotEmpty Double getBalance() {
+        return balance;
+    }
 
     @Max(value = 9999, message = "Pin must be 4 digits long ")
     @Min(value = 1000, message = "pin must be 4 digits long")
@@ -34,20 +41,8 @@ public class AccountEntity {
         this.pin = pin;
     }
 
-    public @NotNull String getEmail() {
-        return email;
-    }
-
-    public void setEmail(@NotNull String email) {
-        this.email = email;
-    }
-
-    public Double getBalance() {
-        return Balance;
-    }
-
     public void setBalance(Double balance) {
-        Balance = balance;
+       this.balance = balance;
     }
 
     public String getFullName() {
@@ -66,6 +61,13 @@ public class AccountEntity {
         this.accountNumber = accountNumber;
     }
 
+    public UserEntity getUser() {
+        return user;
+    }
+
+    public void setUser(UserEntity user) {
+        this.user = user;
+    }
 
 
 }

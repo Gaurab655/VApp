@@ -1,4 +1,4 @@
-package VApp.VApp.userController;
+package VApp.VApp.controller;
 
 import VApp.VApp.services.AccountServices;
 import VApp.VApp.entity.AccountEntity;

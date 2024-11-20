@@ -1,8 +1,8 @@
-package VApp.VApp.userController;
+package VApp.VApp.controller;
 
 import VApp.VApp.dto.LoginUser;
+import VApp.VApp.dto.RegisterAndAccountDto;
 import VApp.VApp.services.UserServices;
-import VApp.VApp.dto.UserDto;
 import VApp.VApp.entity.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -10,14 +10,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/test")
+@RequestMapping("/user")
 public class UserController {
     @Autowired
     private UserServices userServices;
 
     @PostMapping
-    public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto){
-        return userServices.newUser(userDto);
+    public ResponseEntity<RegisterAndAccountDto> createUser(@RequestBody RegisterAndAccountDto registerAndAccountDto){
+        return userServices.newUser(registerAndAccountDto);
     }
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginUser loginUser){
