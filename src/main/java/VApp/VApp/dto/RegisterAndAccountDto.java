@@ -42,6 +42,7 @@ public class RegisterAndAccountDto {
         this.balance = balance;
     }
 
+
     @NotNull
     public int getPin() {
         return pin;
