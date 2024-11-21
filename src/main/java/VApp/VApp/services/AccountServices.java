@@ -2,6 +2,7 @@ package VApp.VApp.services;
 
 import VApp.VApp.entity.AccountEntity;
 import VApp.VApp.repository.AccountRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,8 @@ import java.util.List;
 public class AccountServices {
     @Autowired
     private AccountRepository accountRepository;
+    @Autowired
+    private ModelMapper modelMapper;
 
     @PostMapping
     public ResponseEntity<AccountEntity> createAccount(AccountEntity accountEntity){
