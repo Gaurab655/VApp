@@ -6,6 +6,7 @@ import VApp.VApp.entity.UserEntity;
 import VApp.VApp.repository.AccountRepository;
 import VApp.VApp.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,21 +18,17 @@ public class UserAndAccountServices {
     private AccountRepository accountRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private ModelMapper modelMapper;
 
     @Transactional
     public ResponseEntity<RegisterAndAccountDto> newUserAndAccount(RegisterAndAccountDto registerAndAccountDto){
         try {
-            UserEntity userEntity = new UserEntity();
-            userEntity.setEmail(registerAndAccountDto.getEmail());
-            userEntity.setPassword(registerAndAccountDto.getPassword());
-            UserEntity savedUser = userRepository.save(userEntity);
+            UserEntity userEntity = this.modelMapper.map(registerAndAccountDto,UserEntity.class);
+            UserEntity saveUser = userRepository.save(userEntity);
 
-            AccountEntity accountEntity = new AccountEntity();
-            accountEntity.setBalance(registerAndAccountDto.getBalance());
-            accountEntity.setFullName(registerAndAccountDto.getFullName());
-            accountEntity.setPin(registerAndAccountDto.getPin());
-
-            accountEntity.setUser(savedUser);
+            AccountEntity accountEntity=this.modelMapper.map(registerAndAccountDto,AccountEntity.class);
+            accountEntity.setUser(saveUser);
             accountRepository.save(accountEntity);
 
             userEntity.setAccountEntity(accountEntity);
