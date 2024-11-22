@@ -13,6 +13,10 @@ import java.util.*;
 @Service
 public class UserServices {
     private final Map<String,UserEntity> loggedeUsers = new HashMap<>();
+
+    public Map<String, UserEntity> getLoggedUsers() {
+        return loggedeUsers;
+    }
     @Autowired
     private UserRepository userRepository;
     @Autowired

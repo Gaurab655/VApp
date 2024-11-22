@@ -21,10 +21,7 @@ public class AccountServices {
     @PostMapping
     public ResponseEntity<AccountEntity> createAccount(AccountEntity accountEntity){
         try {
-            AccountEntity accountEntity1 = new AccountEntity();
-            accountEntity1.setFullName(accountEntity.getFullName());
-            accountEntity1.setBalance(accountEntity.getBalance());
-            accountEntity1.setPin(accountEntity.getPin());
+            AccountEntity accountEntity1= this.modelMapper.map(accountEntity,AccountEntity.class);
             AccountEntity saveAccounts=accountRepository.save(accountEntity1);
             return new ResponseEntity<>(saveAccounts, HttpStatus.CREATED);
         }catch (Exception e){
