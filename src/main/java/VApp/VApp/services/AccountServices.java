@@ -1,6 +1,6 @@
 package VApp.VApp.services;
 
-import VApp.VApp.entity.AccountEntity;
+import VApp.VApp.entity.Account;
 import VApp.VApp.repository.AccountRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,17 +19,17 @@ public class AccountServices {
     private ModelMapper modelMapper;
 
     @PostMapping
-    public ResponseEntity<AccountEntity> createAccount(AccountEntity accountEntity){
+    public ResponseEntity<Account> createAccount(Account account){
         try {
-            AccountEntity accountEntity1= this.modelMapper.map(accountEntity,AccountEntity.class);
-            AccountEntity saveAccounts=accountRepository.save(accountEntity1);
+            Account account1 = this.modelMapper.map(account, Account.class);
+            Account saveAccounts=accountRepository.save(account1);
             return new ResponseEntity<>(saveAccounts, HttpStatus.CREATED);
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
     }
-    public List<AccountEntity> getAccounts(){
+    public List<Account> getAccounts(){
         return accountRepository.findAll();
     }
 }

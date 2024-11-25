@@ -2,8 +2,8 @@ package VApp.VApp.services;
 
 import VApp.VApp.dto.DebitCreditDto;
 import VApp.VApp.controller.UserController;
-import VApp.VApp.entity.AccountEntity;
-import VApp.VApp.entity.UserEntity;
+import VApp.VApp.entity.Account;
+import VApp.VApp.entity.User;
 import VApp.VApp.repository.AccountRepository;
 import VApp.VApp.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +21,11 @@ public class AccountManager {
     private UserServices userServices;
 
     public String debit(String token,DebitCreditDto debitCreditDto){
-        UserEntity loggedUser =userServices.getLoggedUsers().get(token);
+        User loggedUser =userServices.getLoggedUsers().get(token);
         if (loggedUser==null){
             return "Unauthorized user or invalid token";
         }
-        AccountEntity account= loggedUser.getAccountEntity();
+        Account account= loggedUser.getAccountEntity();
         if (account==null){
             return "account not found";
         }

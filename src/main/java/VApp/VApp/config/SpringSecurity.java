@@ -16,6 +16,7 @@ public class SpringSecurity  {
                         .requestMatchers("/public/**").permitAll()
                         .anyRequest().authenticated()
                 )
+
                 .httpBasic(httpBasic -> {});
 
         return http.build();
