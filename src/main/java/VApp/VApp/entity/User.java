@@ -22,7 +22,7 @@ public class User {
     @OneToOne(mappedBy = "user",cascade = CascadeType.ALL)
     private Account account;
     @NotNull
-    private String roles;
+    private List<String> roles;
 
     public int getId() {
         return id;
@@ -64,11 +64,11 @@ public class User {
         this.account = account;
     }
 
-    public @NotNull String getRoles() {
+    public @NotNull List<String> getRoles() {
         return roles;
     }
 
-    public void setRoles(@NotNull String roles) {
+    public void setRoles(@NotNull List<String> roles) {
         this.roles = roles;
     }
 }

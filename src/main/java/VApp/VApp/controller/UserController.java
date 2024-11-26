@@ -18,10 +18,7 @@ public class UserController {
     @Autowired
     private UserAndAccountServices userAndAccountServices;
 
-    @PostMapping("/newUser")
-    public ResponseEntity<RegisterAndAccountDto> createUser(@RequestBody RegisterAndAccountDto registerAndAccountDto){
-        return userAndAccountServices.newUserAndAccount(registerAndAccountDto);
-    }
+
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginUser loginUser){
         return userServices.login(loginUser);

@@ -19,7 +19,7 @@ public class RegisterAndAccountDto {
     @NotNull
     private int pin;
     @NotNull
-    private String roles;
+    private List<String> roles;
 
     public @NotNull String getEmail() {
         return email;
@@ -64,11 +64,11 @@ public class RegisterAndAccountDto {
         this.fullName = fullName;
     }
 
-    public @NotNull String getRoles() {
+    public @NotNull List<String> getRoles() {
         return roles;
     }
 
-    public void setRoles(@NotNull String roles) {
+    public void setRoles(@NotNull List<String> roles) {
         this.roles = roles;
     }
 }

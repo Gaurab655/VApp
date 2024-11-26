@@ -10,6 +10,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,11 +21,14 @@ public class UserAndAccountServices {
     private UserRepository userRepository;
     @Autowired
     private ModelMapper modelMapper;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Transactional
     public ResponseEntity<RegisterAndAccountDto> newUserAndAccount(RegisterAndAccountDto registerAndAccountDto){
         try {
             User user = this.modelMapper.map(registerAndAccountDto, User.class);
+            user.setPassword(passwordEncoder.encode(registerAndAccountDto.getPassword()));
             User saveUser = userRepository.save(user);
 
             Account account =this.modelMapper.map(registerAndAccountDto, Account.class);
