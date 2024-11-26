@@ -1,7 +1,7 @@
 package VApp.VApp.controller;
 
 import VApp.VApp.services.AccountServices;
-import VApp.VApp.entity.AccountEntity;
+import VApp.VApp.entity.Account;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,12 +16,12 @@ public class AccountController {
     private AccountServices accountServices;
 
     @PostMapping
-    public ResponseEntity<AccountEntity> openAccount(@RequestBody AccountEntity accountEntity){
-      return accountServices.createAccount(accountEntity);
+    public ResponseEntity<Account> openAccount(@RequestBody Account account){
+      return accountServices.createAccount(account);
     }
 
     @GetMapping
-    public List<AccountEntity> getAccounts(){
+    public List<Account> getAccounts(){
         return accountServices.getAccounts();
     }
 

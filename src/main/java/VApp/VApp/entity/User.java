@@ -4,9 +4,11 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
+import java.util.List;
+
 @Entity
 @Table(name ="users")
-public class UserEntity {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -18,7 +20,9 @@ public class UserEntity {
     private String password;
 
     @OneToOne(mappedBy = "user",cascade = CascadeType.ALL)
-    private AccountEntity accountEntity;
+    private Account account;
+    @NotNull
+    private List<String> roles;
 
     public int getId() {
         return id;
@@ -44,11 +48,27 @@ public class UserEntity {
         this.password = password;
     }
 
-    public AccountEntity getAccountEntity() {
-        return accountEntity;
+    public Account getAccountEntity() {
+        return account;
     }
 
-    public void setAccountEntity(AccountEntity accountEntity) {
-        this.accountEntity = accountEntity;
+    public void setAccountEntity(Account account) {
+        this.account = account;
+    }
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
+    }
+
+    public @NotNull List<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(@NotNull List<String> roles) {
+        this.roles = roles;
     }
 }

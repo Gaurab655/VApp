@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "accounts")
-public class AccountEntity {
+public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long accountNumber;
@@ -23,7 +23,7 @@ public class AccountEntity {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
-    private UserEntity user;
+    private User user;
 
 
     public @NotEmpty Double getBalance() {
@@ -60,11 +60,11 @@ public class AccountEntity {
         this.accountNumber = accountNumber;
     }
 
-    public UserEntity getUser() {
+    public User getUser() {
         return user;
     }
 
-    public void setUser(UserEntity user) {
+    public void setUser(User user) {
         this.user = user;
     }
 }

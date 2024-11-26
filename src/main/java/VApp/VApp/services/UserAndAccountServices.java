@@ -1,8 +1,8 @@
 package VApp.VApp.services;
 
 import VApp.VApp.dto.RegisterAndAccountDto;
-import VApp.VApp.entity.AccountEntity;
-import VApp.VApp.entity.UserEntity;
+import VApp.VApp.entity.Account;
+import VApp.VApp.entity.User;
 import VApp.VApp.repository.AccountRepository;
 import VApp.VApp.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -10,6 +10,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,18 +21,21 @@ public class UserAndAccountServices {
     private UserRepository userRepository;
     @Autowired
     private ModelMapper modelMapper;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Transactional
     public ResponseEntity<RegisterAndAccountDto> newUserAndAccount(RegisterAndAccountDto registerAndAccountDto){
         try {
-            UserEntity userEntity = this.modelMapper.map(registerAndAccountDto,UserEntity.class);
-            UserEntity saveUser = userRepository.save(userEntity);
+            User user = this.modelMapper.map(registerAndAccountDto, User.class);
+            user.setPassword(passwordEncoder.encode(registerAndAccountDto.getPassword()));
+            User saveUser = userRepository.save(user);
 
-            AccountEntity accountEntity=this.modelMapper.map(registerAndAccountDto,AccountEntity.class);
-            accountEntity.setUser(saveUser);
-            accountRepository.save(accountEntity);
+            Account account =this.modelMapper.map(registerAndAccountDto, Account.class);
+            account.setUser(saveUser);
+            accountRepository.save(account);
 
-            userEntity.setAccountEntity(accountEntity);
+            user.setAccountEntity(account);
 
             return new ResponseEntity<>(registerAndAccountDto, HttpStatus.CREATED);
 

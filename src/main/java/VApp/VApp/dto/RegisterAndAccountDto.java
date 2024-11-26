@@ -5,6 +5,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.validation.constraints.NotNull;
 
+import java.util.List;
+
 public class RegisterAndAccountDto {
     @NotNull
     private String email;
@@ -16,6 +18,8 @@ public class RegisterAndAccountDto {
     private double balance;
     @NotNull
     private int pin;
+    @NotNull
+    private List<String> roles;
 
     public @NotNull String getEmail() {
         return email;
@@ -58,5 +62,13 @@ public class RegisterAndAccountDto {
 
     public void setFullName(@NotNull String fullName) {
         this.fullName = fullName;
+    }
+
+    public @NotNull List<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(@NotNull List<String> roles) {
+        this.roles = roles;
     }
 }
