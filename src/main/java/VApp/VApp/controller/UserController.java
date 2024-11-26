@@ -6,7 +6,10 @@ import VApp.VApp.services.UserAndAccountServices;
 import VApp.VApp.services.UserServices;
 import VApp.VApp.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -18,11 +21,6 @@ public class UserController {
     @Autowired
     private UserAndAccountServices userAndAccountServices;
 
-
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginUser loginUser){
-        return userServices.login(loginUser);
-    }
 
     @GetMapping
     public List<User> getUsers(){
@@ -40,8 +38,10 @@ public class UserController {
     }
 
     @PutMapping("/id/{id}")
-    public User updateUser(@RequestBody User user, @PathVariable Integer id){
-       userServices.updateById(user, id);
+    public User updateUser(@RequestBody User user){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email=authentication.getName();
+       userServices.updateByEmail(user, email);
        return user;
     }
 

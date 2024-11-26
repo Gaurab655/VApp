@@ -20,20 +20,13 @@ public class SpringSecurity  {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/userAndAccount/**").permitAll()
-                        .anyRequest().authenticated()
+                        .requestMatchers("/userAndAccount/**", "/public/**").permitAll()
                 )
 
                 .httpBasic(httpBasic -> {});
 
         return http.build();
     }
-//@Bean
-//public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//    http.csrf(csrf -> csrf.disable())
-//            .authorizeHttpRequests(auth -> auth.anyRequest().permitAll()); // Disable authentication
-//    return http.build();
-//}
 
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -44,6 +37,5 @@ public class SpringSecurity  {
     public void configure(AuthenticationManagerBuilder auth) throws Exception{
        auth.userDetailsService(userDetailsService)
                .passwordEncoder(passwordEncoder());
-
     }
 }

@@ -12,10 +12,10 @@ import java.util.*;
 
 @Service
 public class UserServices {
-    private final Map<String, User> loggedeUsers = new HashMap<>();
+    private final Map<String, User> loggedUsers = new HashMap<>();
 
     public Map<String, User> getLoggedUsers() {
-        return loggedeUsers;
+        return loggedUsers;
     }
     @Autowired
     private UserRepository userRepository;
@@ -34,7 +34,6 @@ public class UserServices {
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
     }
 
     public ResponseEntity<Void> deleteById(Integer id) {
@@ -46,8 +45,8 @@ public class UserServices {
         }
     }
 
-    public ResponseEntity<User> updateById(User user, Integer id) {
-        Optional<User> existingEntity = userRepository.findById(id);
+    public ResponseEntity<User> updateByEmail(User user,String email) {
+        Optional<User> existingEntity = userRepository.findByEmail(email);
         if (existingEntity.isPresent()) {
             existingEntity.get().setEmail(user.getEmail());
             existingEntity.get().setPassword(user.getPassword());
@@ -62,16 +61,12 @@ public class UserServices {
             Optional<User> userCheck = userRepository.findByEmail(loginUser.getEmail());
             if (userCheck.isEmpty()) {
                 System.out.println("Email not found");
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>("Email Not Found",HttpStatus.NOT_FOUND);
             }
             User user = userCheck.get();
             if (userCheck.get().getPassword().equals(loginUser.getPassword())){
                 System.out.println("user found");
-
-                String token = UUID.randomUUID().toString();
-                loggedeUsers.put(token, userCheck.get());
-
-                return new ResponseEntity<>(token,HttpStatus.FOUND);
+                return new ResponseEntity<>("User Found",HttpStatus.FOUND);
             }else {
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             }
