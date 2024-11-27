@@ -24,7 +24,7 @@ public class User {
     @NotNull
     private List<String> roles;
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 

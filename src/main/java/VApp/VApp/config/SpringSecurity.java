@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+
 @Configuration
 @EnableWebSecurity
 public class SpringSecurity  {
@@ -22,16 +23,13 @@ public class SpringSecurity  {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/userAndAccount/**", "/public/**", "/user/**").permitAll()
                 )
-
                 .httpBasic(httpBasic -> {});
-
         return http.build();
     }
 
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
-
     }
 
     public void configure(AuthenticationManagerBuilder auth) throws Exception{

@@ -27,14 +27,6 @@ public class UserServices {
 
     }
 
-    public ResponseEntity<User> findById(Integer id) {
-        Optional<User> userEntity = userRepository.findById(id);
-        if (userEntity.isPresent()) {
-            return new ResponseEntity<>(userEntity.get(), HttpStatus.FOUND);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
 
     public ResponseEntity<Void> deleteById(Integer id) {
         if (userRepository.existsById(id)) {
@@ -45,29 +37,15 @@ public class UserServices {
         }
     }
 
-//    public ResponseEntity<User> updateByEmail(User user) {
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//       String email= authentication.getName();
-//        Optional<User> existingEntity = userRepository.findByEmail(email);
-//        if (existingEntity.isPresent()) {
-//            existingEntity.get().setEmail(user.getEmail());
-//            existingEntity.get().setPassword(user.getPassword());
-//            User updatedUser = userRepository.save(existingEntity.get());
-//            return new ResponseEntity<>(updatedUser, HttpStatus.OK);
-//        }
-//        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//    }
-
     public ResponseEntity<User> updateByEmail(User user) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
-
         Optional<User> existingEntity = userRepository.findByEmail(email);
         if (existingEntity.isPresent()) {
             User existingUser = existingEntity.get();
             if (passwordEncoder.matches(user.getPassword(), existingUser.getPassword())) {
                 existingUser.setEmail(user.getEmail());
-                existingUser.setPassword(user.getPassword());
+                existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
                 User updatedUser = userRepository.save(existingUser);
 
                 return new ResponseEntity<>(updatedUser, HttpStatus.OK);
@@ -75,7 +53,6 @@ public class UserServices {
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             }
         }
-
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
@@ -98,4 +75,5 @@ public class UserServices {
             throw new RuntimeException(e);
         }
     }
+
 }
