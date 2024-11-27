@@ -16,12 +16,12 @@ public class Account {
     private String fullName;
     @NotNull
     private Double balance;
-    @NotEmpty
+
     @Max(value = 9999,message = "Pin must be 4 digits long ")
     @Min(value = 1000,message = "pin must be 4 digits long")
     private int pin;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "user_id")
     private User user;
 

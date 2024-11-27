@@ -19,4 +19,5 @@ public class UserAndAccount {
     public ResponseEntity<RegisterAndAccountDto> createUser(@RequestBody RegisterAndAccountDto registerAndAccountDto){
         return userAndAccountServices.newUserAndAccount(registerAndAccountDto);
     }
+
 }

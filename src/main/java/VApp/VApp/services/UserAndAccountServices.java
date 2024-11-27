@@ -34,8 +34,7 @@ public class UserAndAccountServices {
             Account account =this.modelMapper.map(registerAndAccountDto, Account.class);
             account.setUser(saveUser);
             accountRepository.save(account);
-
-            user.setAccountEntity(account);
+            user.setAccount(account);
 
             return new ResponseEntity<>(registerAndAccountDto, HttpStatus.CREATED);
 

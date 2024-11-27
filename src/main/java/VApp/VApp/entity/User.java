@@ -19,7 +19,7 @@ public class User {
     @NotEmpty
     private String password;
 
-    @OneToOne(mappedBy = "user",cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "user",cascade = CascadeType.REMOVE)
     private Account account;
     @NotNull
     private List<String> roles;

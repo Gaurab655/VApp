@@ -20,7 +20,7 @@ public class SpringSecurity  {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/userAndAccount/**", "/public/**").permitAll()
+                        .requestMatchers("/userAndAccount/**", "/public/**", "/user/**").permitAll()
                 )
 
                 .httpBasic(httpBasic -> {});

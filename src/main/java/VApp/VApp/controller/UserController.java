@@ -37,11 +37,9 @@ public class UserController {
          return userServices.deleteById(id);
     }
 
-    @PutMapping("/id/{id}")
+    @PutMapping
     public User updateUser(@RequestBody User user){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email=authentication.getName();
-       userServices.updateByEmail(user, email);
+       userServices.updateByEmail(user);
        return user;
     }
 
