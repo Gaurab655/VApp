@@ -1,13 +1,12 @@
 package VApp.VApp.services;
 
-import VApp.VApp.dto.DebitCreditDto;
+import VApp.VApp.dto.requestDto.DebitCreditDto;
 import VApp.VApp.entity.Account;
 import VApp.VApp.entity.User;
 import VApp.VApp.repository.AccountRepository;
 import VApp.VApp.repository.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.expression.spel.ast.OpAnd;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -45,34 +44,24 @@ public class AccountServices {
         return accountRepository.findAll();
     }
 
-    public ResponseEntity<Account> creditAccount(DebitCreditDto debitCreditDto) {
-
+    public ResponseEntity<DebitCreditDto> creditAccount(DebitCreditDto debitCreditDto) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
+        Optional<User> existingUser = userRepository.findByEmail(email);
+        if (existingUser.isPresent()){
+           Account userAccount = existingUser.get().getAccount();
+           int userPin =userAccount.getPin();
+           if (userPin == debitCreditDto.getPin()){
+               return  new ResponseEntity<>(HttpStatus.OK);
+           }else {
+               return  new ResponseEntity<>(HttpStatus.FORBIDDEN);
+           }
 
-        Optional<User> userExists = userRepository.findByEmail(email);
-        if (userExists.isPresent()) {
-            User existingUser = userExists.get();
-            Optional<Account> accountExists = accountRepository.findById(existingUser.getId());
-            if (accountExists.isPresent()) {
-                Account account = accountExists.get();
 
-                // Check if the PIN matches
-                if (account.getPin() != debitCreditDto.getPin()) {
-                    return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-                }
-
-                // Credit operation (add balance)
-                double newBalance = account.getBalance() + debitCreditDto.getBalance();
-
-                // Update the account balance
-                account.setBalance(newBalance);
-                accountRepository.save(account);
-
-                return new ResponseEntity<>(account, HttpStatus.OK);
-            }
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);  // Account not found
+        } else {
+            return  new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);  // Unauthorized if user not found
+
     }
+
 }

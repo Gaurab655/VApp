@@ -1,9 +1,13 @@
 package VApp.VApp.services;
 
-import VApp.VApp.dto.LoginUser;
+import VApp.VApp.dto.requestDto.LoginUser;
+import VApp.VApp.dto.responseDto.AccountResponseDto;
+import VApp.VApp.dto.responseDto.UserResponseDto;
+import VApp.VApp.entity.Account;
 import VApp.VApp.entity.User;
 import VApp.VApp.repository.AccountRepository;
 import VApp.VApp.repository.UserRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,8 +17,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.*;
 
+
 @Service
 public class UserServices {
+    @Autowired
+    private ModelMapper modelMapper;
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
@@ -22,11 +29,11 @@ public class UserServices {
     @Autowired
     private AccountRepository accountRepository;
 
-    public List<User> getUsers() {
-        return userRepository.findAll();
-
+    public ResponseEntity<List<UserResponseDto>> getUsers() {
+         List<User> users = userRepository.findAll();
+         List<UserResponseDto> result =  users.stream().map((user) -> UserResponseDto.fromEntity(user,modelMapper)).toList();
+         return new ResponseEntity<>(result,HttpStatus.FOUND);
     }
-
 
     public ResponseEntity<Void> deleteById(Integer id) {
         if (userRepository.existsById(id)) {

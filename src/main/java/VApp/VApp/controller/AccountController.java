@@ -1,7 +1,6 @@
 package VApp.VApp.controller;
 
-import VApp.VApp.dto.DebitCreditDto;
-import VApp.VApp.entity.User;
+import VApp.VApp.dto.requestDto.DebitCreditDto;
 import VApp.VApp.services.AccountServices;
 import VApp.VApp.entity.Account;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,9 +26,6 @@ public class AccountController {
         return accountServices.getAccounts();
     }
 
-    @PostMapping("/credit")
-    public ResponseEntity<?> credit(@RequestBody DebitCreditDto debitCreditDto) {
-        return accountServices.creditAccount(debitCreditDto);
-    }
+
 
 }

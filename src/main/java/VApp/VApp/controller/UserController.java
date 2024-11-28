@@ -16,13 +16,6 @@ public class UserController {
     @Autowired
     private UserAndAccountServices userAndAccountServices;
 
-
-    @GetMapping
-    public List<User> getUsers(){
-        return userServices.getUsers();
-    }
-
-
     @DeleteMapping("/id/{id}")
     public ResponseEntity<Void> deleteUsers(@PathVariable Integer id){
          return userServices.deleteById(id);

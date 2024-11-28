@@ -1,5 +1,6 @@
 package VApp.VApp.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -23,6 +24,7 @@ public class Account {
 
     @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
 
 

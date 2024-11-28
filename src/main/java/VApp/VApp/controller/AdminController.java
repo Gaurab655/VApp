@@ -1,21 +1,24 @@
 package VApp.VApp.controller;
 
-import VApp.VApp.dto.requestDto.LoginUser;
+import VApp.VApp.dto.responseDto.UserResponseDto;
+import VApp.VApp.entity.User;
 import VApp.VApp.services.UserServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/public")
-public class PublicController {
+@RequestMapping("/admin")
+public class AdminController {
     @Autowired
     private UserServices userServices;
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginUser loginUser){
-        return userServices.login(loginUser);
+
+    @GetMapping
+    public ResponseEntity<List<UserResponseDto>> getAllUsers(){
+        return userServices.getUsers();
     }
 }

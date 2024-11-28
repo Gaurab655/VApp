@@ -1,4 +1,4 @@
-package VApp.VApp.dto;
+package VApp.VApp.dto.requestDto;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;

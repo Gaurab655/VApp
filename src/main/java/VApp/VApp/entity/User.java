@@ -1,5 +1,7 @@
 package VApp.VApp.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -20,6 +22,8 @@ public class User {
     private String password;
 
     @OneToOne(mappedBy = "user",cascade = CascadeType.REMOVE)
+    @JsonIgnore
+    @JsonProperty("account")
     private Account account;
     @NotNull
     private List<String> roles;
@@ -46,14 +50,6 @@ public class User {
 
     public void setPassword(@NotEmpty String password) {
         this.password = password;
-    }
-
-    public Account getAccountEntity() {
-        return account;
-    }
-
-    public void setAccountEntity(Account account) {
-        this.account = account;
     }
 
     public Account getAccount() {

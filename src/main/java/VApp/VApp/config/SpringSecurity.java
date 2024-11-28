@@ -22,6 +22,7 @@ public class SpringSecurity  {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/userAndAccount/**", "/public/**", "/user/**").permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
                 )
                 .httpBasic(httpBasic -> {});
         return http.build();

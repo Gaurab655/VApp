@@ -1,8 +1,5 @@
-package VApp.VApp.dto;
+package VApp.VApp.dto.requestDto;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.validation.constraints.NotNull;
 
 import java.util.List;

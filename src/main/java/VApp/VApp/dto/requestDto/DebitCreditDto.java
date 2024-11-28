@@ -1,4 +1,4 @@
-package VApp.VApp.dto;
+package VApp.VApp.dto.requestDto;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -20,9 +20,7 @@ public class DebitCreditDto {
         this.balance = balance;
     }
 
-    @NotNull
-    @Min(4)
-    @Max(4)
+
     public int getPin() {
         return pin;
     }

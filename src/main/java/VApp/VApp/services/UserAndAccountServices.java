@@ -1,6 +1,6 @@
 package VApp.VApp.services;
 
-import VApp.VApp.dto.RegisterAndAccountDto;
+import VApp.VApp.dto.requestDto.RegisterAndAccountDto;
 import VApp.VApp.entity.Account;
 import VApp.VApp.entity.User;
 import VApp.VApp.repository.AccountRepository;
@@ -31,7 +31,7 @@ public class UserAndAccountServices {
             user.setPassword(passwordEncoder.encode(registerAndAccountDto.getPassword()));
             User saveUser = userRepository.save(user);
 
-            Account account =this.modelMapper.map(registerAndAccountDto, Account.class);
+            Account account = this.modelMapper.map(registerAndAccountDto, Account.class);
             account.setUser(saveUser);
             accountRepository.save(account);
             user.setAccount(account);
@@ -42,6 +42,4 @@ public class UserAndAccountServices {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
-
-
 }
