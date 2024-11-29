@@ -33,5 +33,9 @@ public class AccountController {
     public ResponseEntity<?> transfer(@RequestBody TransferBalanceDto transferBalanceDto){
         return accountServices.transferAmount(transferBalanceDto);
     }
+    @GetMapping("/check-balance")
+    public ResponseEntity<?> checkBalance(@RequestBody DebitCreditDto debitCreditDto){
+        return accountServices.checkBalance(debitCreditDto);
+    }
 
 }

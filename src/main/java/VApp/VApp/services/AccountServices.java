@@ -2,6 +2,7 @@ package VApp.VApp.services;
 
 import VApp.VApp.dto.requestDto.DebitCreditDto;
 import VApp.VApp.dto.requestDto.TransferBalanceDto;
+import VApp.VApp.dto.responseDto.BalanceResponse;
 import VApp.VApp.entity.Account;
 import VApp.VApp.entity.User;
 import VApp.VApp.repository.AccountRepository;
@@ -113,22 +114,27 @@ if (existingUser.isPresent()){
 
             return new ResponseEntity<>("Transfer success",HttpStatus.OK);
         }else {
-            return new ResponseEntity<>("Insufficient balance to transfer",HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Enter valid amount",HttpStatus.BAD_REQUEST);
         }
-
-
-
-
-
-
-
-
-
-
     }else {
         return new ResponseEntity<>("Pin not valid",HttpStatus.UNAUTHORIZED);
     }
 }
     return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+}
+
+
+public ResponseEntity<String> checkBalance(DebitCreditDto debitCreditDto){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        Optional<User> userExists = userRepository.findByEmail(email);
+        if (userExists.isPresent()){
+            Account account = userExists.get().getAccount();
+            double balance = account.getBalance();
+            String message = "Your total Balance is : "+balance;
+
+            return new ResponseEntity<>(message,HttpStatus.FOUND);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 }
 }
