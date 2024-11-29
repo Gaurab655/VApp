@@ -2,10 +2,7 @@ package VApp.VApp.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 
 @Entity
 @Table(name = "accounts")
@@ -16,6 +13,7 @@ public class Account {
     @NotNull
     private String fullName;
     @NotNull
+    @PositiveOrZero(message = "Balance cannot be negative")
     private Double balance;
 
     @Max(value = 9999,message = "Pin must be 4 digits long ")

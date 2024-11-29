@@ -23,6 +23,7 @@ public class SpringSecurity  {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/userAndAccount/**", "/public/**", "/user/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/accounts/**").hasRole("USER")
                 )
                 .httpBasic(httpBasic -> {});
         return http.build();

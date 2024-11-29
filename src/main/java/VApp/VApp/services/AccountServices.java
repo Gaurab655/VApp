@@ -1,6 +1,7 @@
 package VApp.VApp.services;
 
 import VApp.VApp.dto.requestDto.DebitCreditDto;
+import VApp.VApp.dto.requestDto.TransferBalanceDto;
 import VApp.VApp.entity.Account;
 import VApp.VApp.entity.User;
 import VApp.VApp.repository.AccountRepository;
@@ -13,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
@@ -38,30 +40,95 @@ public class AccountServices {
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-
     }
     public List<Account> getAccounts(){
         return accountRepository.findAll();
     }
 
-    public ResponseEntity<DebitCreditDto> creditAccount(DebitCreditDto debitCreditDto) {
+    @Transactional
+    public ResponseEntity<String> creditAccount(DebitCreditDto debitCreditDto) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
         Optional<User> existingUser = userRepository.findByEmail(email);
+
         if (existingUser.isPresent()){
-           Account userAccount = existingUser.get().getAccount();
+            User user = existingUser.get();
+           Account userAccount = user.getAccount();
+
            int userPin =userAccount.getPin();
            if (userPin == debitCreditDto.getPin()){
-               return  new ResponseEntity<>(HttpStatus.OK);
+               double updatedBalance = userAccount.getBalance()+debitCreditDto.getBalance();
+               userAccount.setBalance(updatedBalance);
+               accountRepository.save(userAccount);
+               return  new ResponseEntity<>("Your updated balance is: " + updatedBalance, HttpStatus.OK);
            }else {
                return  new ResponseEntity<>(HttpStatus.FORBIDDEN);
            }
-
-
         } else {
             return  new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
     }
+    @Transactional
+    public ResponseEntity<String> debitAccount(DebitCreditDto debitCreditDto){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        Optional<User> user = userRepository.findByEmail(email);
 
+        if (user.isEmpty()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        Account account=user.get().getAccount();
+        if (account.getPin()!=debitCreditDto.getPin())  return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+
+        double existingBalance = account.getBalance();
+        if (existingBalance<debitCreditDto.getBalance()) return  new ResponseEntity<>("You don't have enough balance",HttpStatus.BAD_REQUEST);
+
+        double updatedBalance = existingBalance-debitCreditDto.getBalance();
+        account.setBalance(updatedBalance);
+        accountRepository.save(account);
+        return new ResponseEntity<>("Balance Updated"+updatedBalance,HttpStatus.OK);
+    }
+
+@Transactional
+public ResponseEntity<String> transferAmount(TransferBalanceDto transferBalanceDto){
+Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+String email = authentication.getName();
+Optional<User> existingUser = userRepository.findByEmail(email);
+if (existingUser.isPresent()){
+    Account senderAccount = existingUser.get().getAccount();
+
+    Long receiverAccountNumber=transferBalanceDto.getAccountNumber();
+    Optional<Account> receiverAccount = accountRepository.findByAccountNumber(receiverAccountNumber);
+    if (receiverAccount.isEmpty()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    double receiverBalance = receiverAccount.get().getBalance();
+
+    if (senderAccount.getPin()== transferBalanceDto.getPin()){
+        if (senderAccount.getBalance()>=transferBalanceDto.getBalance() && receiverBalance>0){
+            double sentBalance = senderAccount.getBalance()-transferBalanceDto.getBalance();
+            senderAccount.setBalance(sentBalance);
+            accountRepository.save(senderAccount);
+
+            double receiveBalance = receiverBalance + transferBalanceDto.getBalance();
+            receiverAccount.get().setBalance(receiveBalance);
+            accountRepository.save(receiverAccount.get());
+
+            return new ResponseEntity<>("Transfer success",HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>("Insufficient balance to transfer",HttpStatus.BAD_REQUEST);
+        }
+
+
+
+
+
+
+
+
+
+
+    }else {
+        return new ResponseEntity<>("Pin not valid",HttpStatus.UNAUTHORIZED);
+    }
+}
+    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+}
 }

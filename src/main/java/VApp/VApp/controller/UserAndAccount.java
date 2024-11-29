@@ -24,9 +24,5 @@ public class UserAndAccount {
     public ResponseEntity<RegisterAndAccountDto> createUser(@RequestBody RegisterAndAccountDto registerAndAccountDto){
         return userAndAccountServices.newUserAndAccount(registerAndAccountDto);
     }
-    @PostMapping("/credit")
-    public ResponseEntity<?> credit(@RequestBody DebitCreditDto debitCreditDto) {
-        return accountServices.creditAccount(debitCreditDto);
-    }
 
 }
