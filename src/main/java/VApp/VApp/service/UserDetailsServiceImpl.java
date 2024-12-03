@@ -1,31 +1,31 @@
-package VApp.VApp.services;
+package VApp.VApp.service;
 import VApp.VApp.entity.User;
 import VApp.VApp.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
-import java.util.Optional;
 
 @Component
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    public UserDetailsServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Optional<User> user = userRepository.findByEmail(email);
-        if (user.isPresent()){
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(()-> new UsernameNotFoundException("user not found with email "+email));
 
             return org.springframework.security.core.userdetails.User.builder()
-                    .username(user.get().getEmail())
-                    .password(user.get().getPassword())
-                    .roles(user.get().getRoles().toArray(new String[0]))
+                    .username(user.getEmail())
+                    .password(user.getPassword())
+                    .roles(user.getRoles().toArray(new String[0]))
                     .build();
-        }
-        throw new UsernameNotFoundException("User not found with email: " + email);
+
     }
 }
 

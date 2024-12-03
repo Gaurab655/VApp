@@ -3,12 +3,22 @@ package VApp.VApp.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "accounts")
 public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+    @NotNull
     private Long accountNumber;
     @NotNull
     private String fullName;
@@ -25,46 +35,10 @@ public class Account {
     @JsonIgnore
     private User user;
 
+    private static long lastAccountNumber = 655000;
 
-    public @NotEmpty Double getBalance() {
-        return balance;
-    }
-
-    @Max(value = 9999, message = "Pin must be 4 digits long ")
-    @Min(value = 1000, message = "pin must be 4 digits long")
-    public int getPin() {
-        return pin;
-    }
-
-    public void setPin(@Max(value = 9999, message = "Pin must be 4 digits long ") @Min(value = 1000, message = "pin must be 4 digits long") int pin) {
-        this.pin = pin;
-    }
-
-    public void setBalance(Double balance) {
-       this.balance = balance;
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
-    public Long getAccountNumber() {
-        return accountNumber;
-    }
-
-    public void setAccountNumber(Long accountNumber) {
-        this.accountNumber = accountNumber;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
+    @PrePersist
+    private void assignAccountNumber() {
+        this.accountNumber = ++lastAccountNumber;
     }
 }

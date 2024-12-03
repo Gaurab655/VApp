@@ -2,10 +2,18 @@ package VApp.VApp.dto.responseDto;
 
 import VApp.VApp.entity.Account;
 import VApp.VApp.entity.User;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.modelmapper.ModelMapper;
 
 import java.util.List;
 
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserResponseDto {
     private int id;
     private String email;
@@ -22,35 +30,4 @@ public class UserResponseDto {
         return userDto;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public List<String> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(List<String> roles) {
-        this.roles = roles;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public AccountResponseDto getAccountInformation() {
-        return accountInformation;
-    }
-
-    public void setAccountInformation(AccountResponseDto accountInformation) {
-        this.accountInformation = accountInformation;
-    }
 }

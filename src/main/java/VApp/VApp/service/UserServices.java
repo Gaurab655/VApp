@@ -1,14 +1,13 @@
-package VApp.VApp.services;
+package VApp.VApp.service;
 
 import VApp.VApp.dto.requestDto.LoginUser;
-import VApp.VApp.dto.responseDto.AccountResponseDto;
 import VApp.VApp.dto.responseDto.UserResponseDto;
-import VApp.VApp.entity.Account;
 import VApp.VApp.entity.User;
 import VApp.VApp.repository.AccountRepository;
 import VApp.VApp.repository.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.expression.ExpressionException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -20,19 +19,24 @@ import java.util.*;
 
 @Service
 public class UserServices {
-    @Autowired
-    private ModelMapper modelMapper;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private AccountRepository accountRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final ModelMapper modelMapper;
+
+    UserServices(PasswordEncoder passwordEncoder,
+                 UserRepository userRepository,
+                 ModelMapper modelMapper) {
+        this.passwordEncoder = passwordEncoder;
+        this.userRepository = userRepository;
+        this.modelMapper = modelMapper;
+    }
+
 
     public ResponseEntity<List<UserResponseDto>> getUsers() {
-         List<User> users = userRepository.findAll();
-         List<UserResponseDto> result =  users.stream().map((user) -> UserResponseDto.fromEntity(user,modelMapper)).toList();
-         return new ResponseEntity<>(result,HttpStatus.FOUND);
+        List<User> users = userRepository.findAll();
+        List<UserResponseDto> result = users.stream()
+                .map((user) -> UserResponseDto.fromEntity(user, modelMapper)).toList();
+        return new ResponseEntity<>(result, HttpStatus.FOUND);
     }
 
     public ResponseEntity<Void> deleteById(Integer id) {
@@ -44,12 +48,11 @@ public class UserServices {
         }
     }
 
-    public ResponseEntity<User> updateByEmail(User user) {
+    public ResponseEntity<User> updateByEmail(User user) throws Exception{
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
-        Optional<User> existingEntity = userRepository.findByEmail(email);
-        if (existingEntity.isPresent()) {
-            User existingUser = existingEntity.get();
+        User existingUser = userRepository.findByEmail(email)
+                            .orElseThrow(()-> new Exception("User not found with email : "+email));
             if (passwordEncoder.matches(user.getPassword(), existingUser.getPassword())) {
                 existingUser.setEmail(user.getEmail());
                 existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -59,28 +62,18 @@ public class UserServices {
             } else {
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             }
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
 
-    public ResponseEntity<?> login(LoginUser loginUser) {
-        try {
-            Optional<User> userCheck = userRepository.findByEmail(loginUser.getEmail());
-            if (userCheck.isEmpty()) {
-                System.out.println("Email not found");
-                return new ResponseEntity<>("Email Not Found",HttpStatus.NOT_FOUND);
-            }
-            User user = userCheck.get();
-            if (userCheck.get().getPassword().equals(loginUser.getPassword())){
-                System.out.println("user found");
-                return new ResponseEntity<>("User Found",HttpStatus.FOUND);
-            }else {
-                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+    public ResponseEntity<String> login(LoginUser loginUser) throws Exception {
+        User userCheck = userRepository.findByEmail(loginUser.getEmail())
+                .orElseThrow(() -> new Exception("User not found with email : " + loginUser.getEmail()));
+
+        if (userCheck.getPassword().equals(loginUser.getPassword())) {
+            System.out.println("user found");
+            return new ResponseEntity<>("User Found", HttpStatus.FOUND);
+        }else {
+            return new ResponseEntity<>("User not found",HttpStatus.NOT_FOUND);
         }
     }
-
 }

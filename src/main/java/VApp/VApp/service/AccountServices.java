@@ -1,36 +1,35 @@
-package VApp.VApp.services;
+package VApp.VApp.service;
 
 import VApp.VApp.dto.requestDto.DebitCreditDto;
 import VApp.VApp.dto.requestDto.TransferBalanceDto;
-import VApp.VApp.dto.responseDto.BalanceResponse;
 import VApp.VApp.entity.Account;
 import VApp.VApp.entity.User;
 import VApp.VApp.repository.AccountRepository;
 import VApp.VApp.repository.UserRepository;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import java.util.List;
-import java.util.Optional;
-
 @Service
 public class AccountServices {
-    @Autowired
-    private AccountRepository accountRepository;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private ModelMapper modelMapper;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private  final AccountRepository accountRepository;
+    private final UserRepository userRepository;
+    private final ModelMapper modelMapper;
+
+    AccountServices(AccountRepository accountRepository,
+                    UserRepository userRepository,
+                    ModelMapper modelMapper){
+        this.accountRepository=accountRepository;
+        this.userRepository=userRepository;
+        this.modelMapper=modelMapper;
+    }
+
+
 
     @PostMapping
     public ResponseEntity<Account> createAccount(Account account){
@@ -42,22 +41,17 @@ public class AccountServices {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
-    public List<Account> getAccounts(){
-        return accountRepository.findAll();
-    }
 
     @Transactional
-    public ResponseEntity<String> creditAccount(DebitCreditDto debitCreditDto) {
+    public ResponseEntity<String> creditAccount(DebitCreditDto debitCreditDto) throws Exception{
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
-        Optional<User> existingUser = userRepository.findByEmail(email);
+        User existingUser = userRepository.findByEmail(email)
+                .orElseThrow(() -> new Exception("User not found with email" +email));
 
-        if (existingUser.isPresent()){
-            User user = existingUser.get();
-           Account userAccount = user.getAccount();
+        Account userAccount = existingUser.getAccount();
 
-           int userPin =userAccount.getPin();
-           if (userPin == debitCreditDto.getPin()){
+           if (userAccount.getPin() == debitCreditDto.getPin()){
                double updatedBalance = userAccount.getBalance()+debitCreditDto.getBalance();
                userAccount.setBalance(updatedBalance);
                accountRepository.save(userAccount);
@@ -65,19 +59,16 @@ public class AccountServices {
            }else {
                return  new ResponseEntity<>(HttpStatus.FORBIDDEN);
            }
-        } else {
-            return  new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-    }
     @Transactional
-    public ResponseEntity<String> debitAccount(DebitCreditDto debitCreditDto){
+    public ResponseEntity<String> debitAccount(DebitCreditDto debitCreditDto) throws Exception {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
-        Optional<User> user = userRepository.findByEmail(email);
+        User user = userRepository.findByEmail(email).
+                orElseThrow(()-> new Exception("User  Not found with email" +email));
 
-        if (user.isEmpty()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        Account account=user.get().getAccount();
+        Account account=user.getAccount();
         if (account.getPin()!=debitCreditDto.getPin())  return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
         double existingBalance = account.getBalance();
@@ -90,27 +81,28 @@ public class AccountServices {
     }
 
 @Transactional
-public ResponseEntity<String> transferAmount(TransferBalanceDto transferBalanceDto){
+public ResponseEntity<String> transferAmount(TransferBalanceDto transferBalanceDto) throws Exception{
 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 String email = authentication.getName();
-Optional<User> existingUser = userRepository.findByEmail(email);
-if (existingUser.isPresent()){
-    Account senderAccount = existingUser.get().getAccount();
+User existingUser = userRepository.findByEmail(email)
+        .orElseThrow(()-> new Exception("User not found with email"+email));
+if (existingUser!=null){
+    Account senderAccount = existingUser.getAccount();
 
     Long receiverAccountNumber=transferBalanceDto.getAccountNumber();
-    Optional<Account> receiverAccount = accountRepository.findByAccountNumber(receiverAccountNumber);
-    if (receiverAccount.isEmpty()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    double receiverBalance = receiverAccount.get().getBalance();
+    Account receiverAccount = accountRepository.findByAccountNumber(receiverAccountNumber)
+            .orElseThrow(()-> new Exception("Account not found with account number"+receiverAccountNumber));
+    double receiverBalance = receiverAccount.getBalance();
 
-    if (senderAccount.getPin()== transferBalanceDto.getPin()){
-        if (senderAccount.getBalance()>=transferBalanceDto.getBalance() && receiverBalance>0){
+    if (senderAccount.getPin()== transferBalanceDto.getPin() ){
+        if (senderAccount.getBalance()>=transferBalanceDto.getBalance() && transferBalanceDto.getBalance()>0){
             double sentBalance = senderAccount.getBalance()-transferBalanceDto.getBalance();
             senderAccount.setBalance(sentBalance);
             accountRepository.save(senderAccount);
 
             double receiveBalance = receiverBalance + transferBalanceDto.getBalance();
-            receiverAccount.get().setBalance(receiveBalance);
-            accountRepository.save(receiverAccount.get());
+            receiverAccount.setBalance(receiveBalance);
+            accountRepository.save(receiverAccount);
 
             return new ResponseEntity<>("Transfer success",HttpStatus.OK);
         }else {
@@ -124,17 +116,14 @@ if (existingUser.isPresent()){
 }
 
 
-public ResponseEntity<String> checkBalance(DebitCreditDto debitCreditDto){
+public ResponseEntity<String> checkBalance() throws Exception{
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
-        Optional<User> userExists = userRepository.findByEmail(email);
-        if (userExists.isPresent()){
-            Account account = userExists.get().getAccount();
+        User userExists = userRepository.findByEmail(email).orElseThrow(()-> new Exception("User not exists with email "+email));
+
+            Account account = userExists.getAccount();
             double balance = account.getBalance();
             String message = "Your total Balance is : "+balance;
-
             return new ResponseEntity<>(message,HttpStatus.FOUND);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 }
 }

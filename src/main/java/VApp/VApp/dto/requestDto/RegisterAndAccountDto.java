@@ -1,9 +1,17 @@
 package VApp.VApp.dto.requestDto;
 
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class RegisterAndAccountDto {
     @NotNull
     private String email;
@@ -17,55 +25,4 @@ public class RegisterAndAccountDto {
     private int pin;
     @NotNull
     private List<String> roles;
-
-    public @NotNull String getEmail() {
-        return email;
-    }
-
-    public void setEmail(@NotNull String email) {
-        this.email = email;
-    }
-
-    public @NotNull String getPassword() {
-        return password;
-    }
-
-    public void setPassword(@NotNull String password) {
-        this.password = password;
-    }
-
-    @NotNull
-    public double getBalance() {
-        return balance;
-    }
-
-    public void setBalance(@NotNull double balance) {
-        this.balance = balance;
-    }
-
-
-    @NotNull
-    public int getPin() {
-        return pin;
-    }
-
-    public void setPin(@NotNull int pin) {
-        this.pin = pin;
-    }
-
-    public @NotNull String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(@NotNull String fullName) {
-        this.fullName = fullName;
-    }
-
-    public @NotNull List<String> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(@NotNull List<String> roles) {
-        this.roles = roles;
-    }
 }

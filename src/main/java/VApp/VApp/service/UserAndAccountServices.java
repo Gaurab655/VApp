@@ -1,4 +1,4 @@
-package VApp.VApp.services;
+package VApp.VApp.service;
 
 import VApp.VApp.dto.requestDto.RegisterAndAccountDto;
 import VApp.VApp.entity.Account;
@@ -15,14 +15,22 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserAndAccountServices {
-    @Autowired
-    private AccountRepository accountRepository;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private ModelMapper modelMapper;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+
+
+    private final AccountRepository accountRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final ModelMapper modelMapper;
+
+    UserAndAccountServices(AccountRepository accountRepository,
+                           UserRepository userRepository,
+                           ModelMapper modelMapper,
+                           PasswordEncoder passwordEncoder){
+        this.accountRepository=accountRepository;
+        this.userRepository=userRepository;
+        this.modelMapper=modelMapper;
+        this.passwordEncoder=passwordEncoder;
+    }
 
     @Transactional
     public ResponseEntity<RegisterAndAccountDto> newUserAndAccount(RegisterAndAccountDto registerAndAccountDto){
@@ -31,7 +39,7 @@ public class UserAndAccountServices {
             user.setPassword(passwordEncoder.encode(registerAndAccountDto.getPassword()));
             User saveUser = userRepository.save(user);
 
-            Account account = this.modelMapper.map(registerAndAccountDto, Account.class);
+            Account account = this.modelMapper.map(registerAndAccountDto,Account.class);
             account.setUser(saveUser);
             accountRepository.save(account);
             user.setAccount(account);
