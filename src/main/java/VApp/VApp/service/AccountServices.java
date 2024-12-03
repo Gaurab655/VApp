@@ -29,8 +29,6 @@ public class AccountServices {
         this.modelMapper=modelMapper;
     }
 
-
-
     @PostMapping
     public ResponseEntity<Account> createAccount(Account account){
         try {
@@ -65,8 +63,8 @@ public class AccountServices {
     public ResponseEntity<String> debitAccount(DebitCreditDto debitCreditDto) throws Exception {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
-        User user = userRepository.findByEmail(email).
-                orElseThrow(()-> new Exception("User  Not found with email" +email));
+        User user = userRepository.findByEmail(email)
+                    .orElseThrow(()-> new Exception("User  Not found with email" +email));
 
         Account account=user.getAccount();
         if (account.getPin()!=debitCreditDto.getPin())  return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -85,7 +83,7 @@ public ResponseEntity<String> transferAmount(TransferBalanceDto transferBalanceD
 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 String email = authentication.getName();
 User existingUser = userRepository.findByEmail(email)
-        .orElseThrow(()-> new Exception("User not found with email"+email));
+                   .orElseThrow(()-> new Exception("User not found with email"+email));
 if (existingUser!=null){
     Account senderAccount = existingUser.getAccount();
 
@@ -94,8 +92,8 @@ if (existingUser!=null){
             .orElseThrow(()-> new Exception("Account not found with account number"+receiverAccountNumber));
     double receiverBalance = receiverAccount.getBalance();
 
-    if (senderAccount.getPin()== transferBalanceDto.getPin() ){
-        if (senderAccount.getBalance()>=transferBalanceDto.getBalance() && transferBalanceDto.getBalance()>0){
+    if (senderAccount.getPin() == transferBalanceDto.getPin() ){
+        if (senderAccount.getBalance() >= transferBalanceDto.getBalance() && transferBalanceDto.getBalance()>0){
             double sentBalance = senderAccount.getBalance()-transferBalanceDto.getBalance();
             senderAccount.setBalance(sentBalance);
             accountRepository.save(senderAccount);
@@ -119,7 +117,8 @@ if (existingUser!=null){
 public ResponseEntity<String> checkBalance() throws Exception{
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
-        User userExists = userRepository.findByEmail(email).orElseThrow(()-> new Exception("User not exists with email "+email));
+        User userExists = userRepository.findByEmail(email)
+                          .orElseThrow(()-> new Exception("User not exists with email "+email));
 
             Account account = userExists.getAccount();
             double balance = account.getBalance();
