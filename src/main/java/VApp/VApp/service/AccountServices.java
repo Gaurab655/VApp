@@ -6,6 +6,7 @@ import VApp.VApp.entity.Account;
 import VApp.VApp.entity.User;
 import VApp.VApp.repository.AccountRepository;
 import VApp.VApp.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,18 +17,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 
 @Service
+@RequiredArgsConstructor
 public class AccountServices {
-    private  final AccountRepository accountRepository;
+    private final AccountRepository accountRepository;
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
-
-    AccountServices(AccountRepository accountRepository,
-                    UserRepository userRepository,
-                    ModelMapper modelMapper){
-        this.accountRepository=accountRepository;
-        this.userRepository=userRepository;
-        this.modelMapper=modelMapper;
-    }
 
     @PostMapping
     public ResponseEntity<Account> createAccount(Account account){
@@ -40,7 +34,7 @@ public class AccountServices {
         }
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<String> creditAccount(DebitCreditDto debitCreditDto) throws Exception{
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
@@ -59,7 +53,7 @@ public class AccountServices {
            }
         }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<String> debitAccount(DebitCreditDto debitCreditDto) throws Exception {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
@@ -78,7 +72,7 @@ public class AccountServices {
         return new ResponseEntity<>("Balance Updated"+updatedBalance,HttpStatus.OK);
     }
 
-@Transactional
+@Transactional(rollbackFor = Exception.class)
 public ResponseEntity<String> transferAmount(TransferBalanceDto transferBalanceDto) throws Exception{
 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 String email = authentication.getName();

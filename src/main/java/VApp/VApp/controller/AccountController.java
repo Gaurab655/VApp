@@ -5,18 +5,16 @@ import VApp.VApp.dto.requestDto.TransferBalanceDto;
 import VApp.VApp.service.AccountServices;
 import VApp.VApp.entity.Account;
 import jdk.jfr.StackTrace;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/account")
+@RequiredArgsConstructor
 public class AccountController {
     private final AccountServices accountServices;
-
-    AccountController(AccountServices accountServices){
-        this.accountServices=accountServices;
-    }
 
     @PostMapping("/credit")
     public ResponseEntity<?> credit(@RequestBody DebitCreditDto debitCreditDto) throws Exception {

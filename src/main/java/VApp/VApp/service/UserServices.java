@@ -5,6 +5,7 @@ import VApp.VApp.dto.responseDto.UserResponseDto;
 import VApp.VApp.entity.User;
 import VApp.VApp.repository.AccountRepository;
 import VApp.VApp.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.expression.ExpressionException;
@@ -18,19 +19,11 @@ import java.util.*;
 
 
 @Service
+@RequiredArgsConstructor
 public class UserServices {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
-
-    UserServices(PasswordEncoder passwordEncoder,
-                 UserRepository userRepository,
-                 ModelMapper modelMapper) {
-        this.passwordEncoder = passwordEncoder;
-        this.userRepository = userRepository;
-        this.modelMapper = modelMapper;
-    }
-
 
     public ResponseEntity<List<UserResponseDto>> getUsers() {
         List<User> users = userRepository.findAll();

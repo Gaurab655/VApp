@@ -16,7 +16,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name ="users")
+@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,15 +25,14 @@ public class User {
     @NotNull
     @Column(unique = true)
     private String email;
+
     @NotEmpty
     private String password;
 
-    @OneToOne(mappedBy = "user",cascade = CascadeType.REMOVE)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonIgnore
-    @JsonProperty("account")
     private Account account;
+
     @NotNull
     private List<String> roles;
-
-
 }
