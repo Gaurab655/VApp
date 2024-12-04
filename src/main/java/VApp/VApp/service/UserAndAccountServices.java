@@ -23,7 +23,7 @@ public class UserAndAccountServices {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
 
-    @Transactional
+    @Transactional()
     public ResponseEntity<RegisterAndAccountDto> newUserAndAccount(RegisterAndAccountDto registerAndAccountDto) {
         try {
 

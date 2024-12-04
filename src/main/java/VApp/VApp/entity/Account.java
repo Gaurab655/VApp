@@ -19,7 +19,6 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @NotNull
     @Column(unique = true)
     private Long accountNumber;
 
@@ -34,8 +33,8 @@ public class Account {
     @Min(value = 1000, message = "Pin must be 4 digits long")
     private int pin;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @OneToOne
+    @JoinColumn(name = "user_id")
     @JsonIgnore
     private User user;
 }

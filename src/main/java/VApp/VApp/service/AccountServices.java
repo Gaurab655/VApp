@@ -4,6 +4,7 @@ import VApp.VApp.dto.requestDto.DebitCreditDto;
 import VApp.VApp.dto.requestDto.TransferBalanceDto;
 import VApp.VApp.entity.Account;
 import VApp.VApp.entity.User;
+import VApp.VApp.exception.UserNotFoundException;
 import VApp.VApp.repository.AccountRepository;
 import VApp.VApp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -53,12 +55,12 @@ public class AccountServices {
            }
         }
 
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional
     public ResponseEntity<String> debitAccount(DebitCreditDto debitCreditDto) throws Exception {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
         User user = userRepository.findByEmail(email)
-                    .orElseThrow(()-> new Exception("User  Not found with email" +email));
+                    .orElseThrow(()->new Exception("user not found with email "+email));
 
         Account account=user.getAccount();
         if (account.getPin()!=debitCreditDto.getPin())  return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
