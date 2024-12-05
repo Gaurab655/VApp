@@ -23,22 +23,24 @@ public class UserAndAccountServices {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
 
-    @Transactional()
+    @Transactional
     public ResponseEntity<RegisterAndAccountDto> newUserAndAccount(RegisterAndAccountDto registerAndAccountDto) {
         try {
 
             User user = this.modelMapper.map(registerAndAccountDto, User.class);
             user.setPassword(passwordEncoder.encode(registerAndAccountDto.getPassword()));
-            userRepository.save(user);
 
             Account account = this.modelMapper.map(registerAndAccountDto, Account.class);
+
             account.setUser(user);
             user.setAccount(account);
 
             Long nextAccountNumber = generateNextAccountNumber();
             account.setAccountNumber(nextAccountNumber);
 
-            accountRepository.save(account);
+            userRepository.save(user);
+            // automatically saves account coz we are using cascade
+//            accountRepository.save(account);
 
             return new ResponseEntity<>(registerAndAccountDto, HttpStatus.CREATED);
         } catch (Exception e) {
