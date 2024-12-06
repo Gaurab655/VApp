@@ -13,11 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -31,13 +28,13 @@ public class AccountServices {
         String email = authentication.getName();
         Account userAccount = userRepository.findByEmail(email).orElseThrow(()-> new UserNotFoundException("user not found",HttpStatus.NOT_FOUND)).getAccount();
 
-           if (userAccount.getPin() == debitCreditDto.getPin()){
+           if (userAccount.getPin()==(debitCreditDto.getPin())){
                double updatedBalance = userAccount.getBalance()+debitCreditDto.getBalance();
                userAccount.setBalance(updatedBalance);
                accountRepository.save(userAccount);
                return  new ResponseEntity<>("Your updated balance is: " + updatedBalance, HttpStatus.OK);
            }else {
-               return  new ResponseEntity<>(HttpStatus.FORBIDDEN);
+               throw new BankException("Please enter valid pin",HttpStatus.FORBIDDEN);
            }
         }
 
@@ -45,7 +42,8 @@ public class AccountServices {
     public ResponseEntity<String> debitAccount(DebitCreditDto debitCreditDto) throws Exception {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
-        Account account=userRepository.findByEmail(email).get().getAccount();
+        Account account=userRepository.findByEmail(email)
+                .orElseThrow(()->new RuntimeException("User not found with email "+email)).getAccount();
         if (account.getPin()!=debitCreditDto.getPin())  return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
         double existingBalance = account.getBalance();
@@ -71,9 +69,13 @@ public class AccountServices {
         Account receiverAccount = accountRepository.findByAccountNumber(receiverAccountNumber)
                 .orElseThrow(() -> new BankException("Account not found with account number " + receiverAccountNumber,HttpStatus.NOT_FOUND));
 
+        if (senderAccount.equals(receiverAccount)){
+            throw new BankException("Enter different account number",HttpStatus.BAD_REQUEST);
+        }
+
         double receiverBalance = receiverAccount.getBalance();
 
-        if (senderAccount.getPin() == transferBalanceDto.getPin()) {
+        if (senderAccount.getPin() .equals(transferBalanceDto.getPin()) ) {
             if (senderAccount.getBalance() >= transferBalanceDto.getBalance() && transferBalanceDto.getBalance() > 0) {
                 double sentBalance = senderAccount.getBalance() - transferBalanceDto.getBalance();
                 senderAccount.setBalance(sentBalance);

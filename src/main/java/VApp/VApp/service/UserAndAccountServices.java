@@ -6,6 +6,7 @@ import VApp.VApp.entity.User;
 import VApp.VApp.repository.AccountRepository;
 import VApp.VApp.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +25,8 @@ public class UserAndAccountServices {
     private final ModelMapper modelMapper;
 
     @Transactional
-    public ResponseEntity<RegisterAndAccountDto> newUserAndAccount(RegisterAndAccountDto registerAndAccountDto) {
+    public ResponseEntity<RegisterAndAccountDto> newUserAndAccount( RegisterAndAccountDto registerAndAccountDto) {
         try {
-
             User user = this.modelMapper.map(registerAndAccountDto, User.class);
             user.setPassword(passwordEncoder.encode(registerAndAccountDto.getPassword()));
 
@@ -39,8 +39,6 @@ public class UserAndAccountServices {
             account.setAccountNumber(nextAccountNumber);
 
             userRepository.save(user);
-            // automatically saves account coz we are using cascade
-//            accountRepository.save(account);
 
             return new ResponseEntity<>(registerAndAccountDto, HttpStatus.CREATED);
         } catch (Exception e) {
