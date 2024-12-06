@@ -28,7 +28,7 @@ public class AccountServices {
         String email = authentication.getName();
         Account userAccount = userRepository.findByEmail(email).orElseThrow(()-> new UserNotFoundException("user not found",HttpStatus.NOT_FOUND)).getAccount();
 
-           if (userAccount.getPin()==(debitCreditDto.getPin())){
+           if (userAccount.getPin().equals(debitCreditDto.getPin())){
                double updatedBalance = userAccount.getBalance()+debitCreditDto.getBalance();
                userAccount.setBalance(updatedBalance);
                accountRepository.save(userAccount);
@@ -44,7 +44,7 @@ public class AccountServices {
         String email = authentication.getName();
         Account account=userRepository.findByEmail(email)
                 .orElseThrow(()->new RuntimeException("User not found with email "+email)).getAccount();
-        if (account.getPin()!=debitCreditDto.getPin())  return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        if (!account.getPin().equals(debitCreditDto.getPin()))  return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
         double existingBalance = account.getBalance();
         if (existingBalance<debitCreditDto.getBalance()) throw new BankException("You don't have enough balance",HttpStatus.BAD_REQUEST);
@@ -76,8 +76,21 @@ public class AccountServices {
         double receiverBalance = receiverAccount.getBalance();
 
         if (senderAccount.getPin() .equals(transferBalanceDto.getPin()) ) {
-            if (senderAccount.getBalance() >= transferBalanceDto.getBalance() && transferBalanceDto.getBalance() > 0) {
-                double sentBalance = senderAccount.getBalance() - transferBalanceDto.getBalance();
+            double sendingBalance = transferBalanceDto.getBalance();
+            if (senderAccount.getBalance() >= sendingBalance && sendingBalance > 0) {
+
+                double serviceCharge;
+                if (sendingBalance<1000){
+                   serviceCharge =10;
+                } else if (sendingBalance>=1000 && sendingBalance<100000) {
+                    serviceCharge =13;
+                } else if (sendingBalance>=100000 && sendingBalance<1000000) {
+                   serviceCharge=15;
+                }else {
+                    serviceCharge=0;
+                }
+
+                double sentBalance = senderAccount.getBalance() - transferBalanceDto.getBalance()-serviceCharge;
                 senderAccount.setBalance(sentBalance);
 
                 double receiveBalance = receiverBalance + transferBalanceDto.getBalance();
@@ -86,9 +99,10 @@ public class AccountServices {
                 accountRepository.save(senderAccount);
                 accountRepository.save(receiverAccount);
 
-                return new ResponseEntity<>("Transfer success", HttpStatus.OK);
+                return new ResponseEntity<>("Transfer success with service charge : "+serviceCharge, HttpStatus.OK);
             } else {
-                throw new BankException("Enter valid Amount",HttpStatus.BAD_REQUEST);
+                throw new BankException("Insufficient balance ! please enter valid balance"
+                                        ,HttpStatus.BAD_REQUEST);
             }
         } else {
             throw new BankException("Pin not valid",HttpStatus.UNAUTHORIZED);
