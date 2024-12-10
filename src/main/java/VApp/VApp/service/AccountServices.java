@@ -3,10 +3,13 @@ package VApp.VApp.service;
 import VApp.VApp.dto.requestDto.DebitCreditDto;
 import VApp.VApp.dto.requestDto.TransferBalanceDto;
 import VApp.VApp.entity.Account;
+import VApp.VApp.entity.BankAccount;
 import VApp.VApp.entity.User;
 import VApp.VApp.exception.BankException;
 import VApp.VApp.exception.UserNotFoundException;
+import VApp.VApp.initializer.ConstBankAccount;
 import VApp.VApp.repository.AccountRepository;
+import VApp.VApp.repository.BankAccountRepository;
 import VApp.VApp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class AccountServices {
     private final AccountRepository accountRepository;
     private final UserRepository userRepository;
+   private final BankAccountRepository bankAccountRepository;
 
     @Transactional
     public ResponseEntity<String> creditAccount(DebitCreditDto debitCreditDto) throws Exception{
@@ -82,12 +86,12 @@ public class AccountServices {
                 double serviceCharge;
                 if (sendingBalance<1000){
                    serviceCharge =10;
-                } else if (sendingBalance>=1000 && sendingBalance<100000) {
+                } else if (sendingBalance<100000) {
                     serviceCharge =13;
-                } else if (sendingBalance>=100000 && sendingBalance<1000000) {
+                } else if (sendingBalance<1000000) {
                    serviceCharge=15;
                 }else {
-                    serviceCharge=0;
+                    serviceCharge=20;
                 }
 
                 double sentBalance = senderAccount.getBalance() - transferBalanceDto.getBalance()-serviceCharge;
@@ -96,13 +100,21 @@ public class AccountServices {
                 double receiveBalance = receiverBalance + transferBalanceDto.getBalance();
                 receiverAccount.setBalance(receiveBalance);
 
+                BankAccount bankAccount = bankAccountRepository.findById(1)
+                        .orElseThrow(()->new BankException("user not found exception",HttpStatus.NOT_FOUND));
+                double totalServiceCharge = bankAccount.getBalance()+serviceCharge;
+                bankAccount.setBalance(totalServiceCharge);
+                bankAccountRepository.save(bankAccount);
+
                 accountRepository.save(senderAccount);
                 accountRepository.save(receiverAccount);
 
+
+
+
                 return new ResponseEntity<>("Transfer success with service charge : "+serviceCharge, HttpStatus.OK);
             } else {
-                throw new BankException("Insufficient balance ! please enter valid balance"
-                                        ,HttpStatus.BAD_REQUEST);
+                throw new BankException("Insufficient balance ! please enter valid balance",HttpStatus.BAD_REQUEST);
             }
         } else {
             throw new BankException("Pin not valid",HttpStatus.UNAUTHORIZED);

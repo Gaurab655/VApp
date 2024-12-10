@@ -14,7 +14,6 @@ import lombok.Setter;
 @Table(name = "bank")
 public class BankAccount {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private Long accountNumber;
     private String name ;
