@@ -19,7 +19,6 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @NotNull
     @Column(unique = true)
     private Long accountNumber;
 
@@ -30,12 +29,13 @@ public class Account {
     @PositiveOrZero(message = "Balance cannot be negative")
     private Double balance;
 
-    @Max(value = 9999, message = "Pin must be 4 digits long ")
-    @Min(value = 1000, message = "Pin must be 4 digits long")
-    private int pin;
+    @NotNull
+    @Min(value = 1000, message = "PIN must be at least 1000")
+    @Max(value = 9999,message = "Pin must be at least 9999")
+    private Integer pin;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @OneToOne
+    @JoinColumn(name = "user_id")
     @JsonIgnore
     private User user;
 }

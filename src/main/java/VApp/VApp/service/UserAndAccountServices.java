@@ -6,6 +6,7 @@ import VApp.VApp.entity.User;
 import VApp.VApp.repository.AccountRepository;
 import VApp.VApp.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,21 +25,20 @@ public class UserAndAccountServices {
     private final ModelMapper modelMapper;
 
     @Transactional
-    public ResponseEntity<RegisterAndAccountDto> newUserAndAccount(RegisterAndAccountDto registerAndAccountDto) {
+    public ResponseEntity<RegisterAndAccountDto> newUserAndAccount( RegisterAndAccountDto registerAndAccountDto) {
         try {
-
             User user = this.modelMapper.map(registerAndAccountDto, User.class);
             user.setPassword(passwordEncoder.encode(registerAndAccountDto.getPassword()));
-            userRepository.save(user);
 
             Account account = this.modelMapper.map(registerAndAccountDto, Account.class);
+
             account.setUser(user);
             user.setAccount(account);
 
             Long nextAccountNumber = generateNextAccountNumber();
             account.setAccountNumber(nextAccountNumber);
 
-            accountRepository.save(account);
+            userRepository.save(user);
 
             return new ResponseEntity<>(registerAndAccountDto, HttpStatus.CREATED);
         } catch (Exception e) {
