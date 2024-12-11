@@ -86,24 +86,30 @@ public class AccountServices {
                         .orElseThrow(()->new BankException("Cannot complete the transaction",HttpStatus.INTERNAL_SERVER_ERROR));
                 double serviceCharge = serviceChargeEntity.getDiscount();
                 if (serviceChargeEntity.getType().equalsIgnoreCase("percent")){
-                    serviceCharge = (sendingBalance*receiverBalance)/100;
+                    serviceCharge = (sendingBalance*serviceCharge)/100;
                 }
-                double sentBalance = senderAccount.getBalance() - transferBalanceDto.getBalance()-serviceCharge;
-                senderAccount.setBalance(sentBalance);
+                try {
+                    double sentBalance = senderAccount.getBalance() - transferBalanceDto.getBalance() - serviceCharge;
+                    senderAccount.setBalance(sentBalance);
 
-                double receiveBalance = receiverBalance + transferBalanceDto.getBalance();
-                receiverAccount.setBalance(receiveBalance);
+                    double receiveBalance = receiverBalance + transferBalanceDto.getBalance();
+                    receiverAccount.setBalance(receiveBalance);
 
-                BankAccount bankAccount = bankAccountRepository.findById(1)
-                        .orElseThrow(()->new BankException("user not found exception",HttpStatus.NOT_FOUND));
-                double totalServiceCharge = bankAccount.getBalance()+serviceCharge;
-                bankAccount.setBalance(totalServiceCharge);
-                bankAccountRepository.save(bankAccount);
+                    BankAccount bankAccount = bankAccountRepository.findById(1)
+                            .orElseThrow(() -> new BankException("user not found exception", HttpStatus.NOT_FOUND));
+                    double totalServiceCharge = bankAccount.getBalance() + serviceCharge;
+                    bankAccount.setBalance(totalServiceCharge);
+                    bankAccountRepository.save(bankAccount);
 
-                accountRepository.save(senderAccount);
-                accountRepository.save(receiverAccount);
+                    accountRepository.save(senderAccount);
+                    accountRepository.save(receiverAccount);
+                    return new ResponseEntity<>("Transfer success with service charge : "+serviceCharge, HttpStatus.OK);
 
-                return new ResponseEntity<>("Transfer success with service charge : "+serviceCharge, HttpStatus.OK);
+                } catch (Exception e) {
+                    e.getMessage();
+                     throw new BankException("no enough balance",HttpStatus.BAD_REQUEST);
+                }
+
             } else {
                 throw new BankException("Insufficient balance ! please enter valid balance",HttpStatus.BAD_REQUEST);
             }
