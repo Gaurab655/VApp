@@ -4,12 +4,13 @@ import VApp.VApp.dto.requestDto.DebitCreditDto;
 import VApp.VApp.dto.requestDto.TransferBalanceDto;
 import VApp.VApp.entity.Account;
 import VApp.VApp.entity.BankAccount;
+import VApp.VApp.entity.ServiceCharge;
 import VApp.VApp.entity.User;
 import VApp.VApp.exception.BankException;
 import VApp.VApp.exception.UserNotFoundException;
-import VApp.VApp.initializer.ConstBankAccount;
 import VApp.VApp.repository.AccountRepository;
 import VApp.VApp.repository.BankAccountRepository;
+import VApp.VApp.repository.ServiceChargeRepo;
 import VApp.VApp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,7 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class AccountServices {
     private final AccountRepository accountRepository;
     private final UserRepository userRepository;
-   private final BankAccountRepository bankAccountRepository;
+    private final BankAccountRepository bankAccountRepository;
+    private final ServiceChargeRepo serviceChargeRepo;
 
     @Transactional
     public ResponseEntity<String> creditAccount(DebitCreditDto debitCreditDto) throws Exception{
@@ -76,24 +78,16 @@ public class AccountServices {
         if (senderAccount.equals(receiverAccount)){
             throw new BankException("Enter different account number",HttpStatus.BAD_REQUEST);
         }
-
         double receiverBalance = receiverAccount.getBalance();
-
         if (senderAccount.getPin() .equals(transferBalanceDto.getPin()) ) {
             double sendingBalance = transferBalanceDto.getBalance();
             if (senderAccount.getBalance() >= sendingBalance && sendingBalance > 0) {
-
-                double serviceCharge;
-                if (sendingBalance<1000){
-                   serviceCharge =10;
-                } else if (sendingBalance<100000) {
-                    serviceCharge =13;
-                } else if (sendingBalance<1000000) {
-                   serviceCharge=15;
-                }else {
-                    serviceCharge=20;
+                ServiceCharge serviceChargeEntity = serviceChargeRepo.findByAmountRange(sendingBalance)
+                        .orElseThrow(()->new BankException("Cannot complete the transaction",HttpStatus.INTERNAL_SERVER_ERROR));
+                double serviceCharge = serviceChargeEntity.getDiscount();
+                if (serviceChargeEntity.getType().equalsIgnoreCase("percent")){
+                    serviceCharge = (sendingBalance*receiverBalance)/100;
                 }
-
                 double sentBalance = senderAccount.getBalance() - transferBalanceDto.getBalance()-serviceCharge;
                 senderAccount.setBalance(sentBalance);
 
@@ -108,9 +102,6 @@ public class AccountServices {
 
                 accountRepository.save(senderAccount);
                 accountRepository.save(receiverAccount);
-
-
-
 
                 return new ResponseEntity<>("Transfer success with service charge : "+serviceCharge, HttpStatus.OK);
             } else {
