@@ -16,11 +16,19 @@ import lombok.Setter;
 public class ServiceCharge {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id ;
-    @NotNull
-    private String amountRange;
-    @NotNull
+    private Long id;
+
+    @Column(name = "min_amount", nullable = false)
+    private double minAmount;
+
+    @Column(name = "max_amount", nullable = false)
+    private double maxAmount;
+
+    @Column(nullable = false)
     private double discount;
-    @NotNull
+
+    @Column(nullable = false)
     private String type;
+
 }
+

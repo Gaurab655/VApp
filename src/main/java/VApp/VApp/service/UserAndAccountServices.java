@@ -42,7 +42,7 @@ public class UserAndAccountServices {
 
             return new ResponseEntity<>(registerAndAccountDto, HttpStatus.CREATED);
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }

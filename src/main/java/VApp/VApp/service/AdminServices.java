@@ -30,7 +30,6 @@ public class AdminServices {
         if (admin!=null){
             ServiceCharge serviceCharge = this.modelMapper.map(serviceChargeDto,ServiceCharge.class);
             serviceChargeRepo.save(serviceCharge);
-
             return new ResponseEntity<>(serviceChargeDto,HttpStatus.CREATED);
         }
         return null;

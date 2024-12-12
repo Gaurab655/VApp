@@ -20,6 +20,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
 @Service
 @RequiredArgsConstructor
 public class AccountServices {
@@ -66,8 +68,7 @@ public class AccountServices {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
 
-        User existingUser = userRepository.findByEmail(email)
-                .orElseThrow(() -> new BankException("User not found with email " + email,HttpStatus.NOT_FOUND));
+        User existingUser = userRepository.findByEmail(email).orElseThrow(() -> new BankException("User not found with email " + email,HttpStatus.NOT_FOUND));
 
         Account senderAccount = existingUser.getAccount();
         Long receiverAccountNumber = transferBalanceDto.getAccountNumber();
@@ -82,9 +83,9 @@ public class AccountServices {
         if (senderAccount.getPin() .equals(transferBalanceDto.getPin()) ) {
             double sendingBalance = transferBalanceDto.getBalance();
             if (senderAccount.getBalance() >= sendingBalance && sendingBalance > 0) {
-                ServiceCharge serviceChargeEntity = serviceChargeRepo.findByAmountRange(sendingBalance)
-                        .orElseThrow(()->new BankException("Cannot complete the transaction",HttpStatus.INTERNAL_SERVER_ERROR));
+                ServiceCharge serviceChargeEntity = serviceChargeRepo.findByAmountRange(sendingBalance).orElseThrow(()->new BankException("Cannot complete the transaction",HttpStatus.INTERNAL_SERVER_ERROR));
                 double serviceCharge = serviceChargeEntity.getDiscount();
+
                 if (serviceChargeEntity.getType().equalsIgnoreCase("percent")){
                     serviceCharge = (sendingBalance*serviceCharge)/100;
                 }
@@ -95,21 +96,20 @@ public class AccountServices {
                     double receiveBalance = receiverBalance + transferBalanceDto.getBalance();
                     receiverAccount.setBalance(receiveBalance);
 
-                    BankAccount bankAccount = bankAccountRepository.findById(1)
-                            .orElseThrow(() -> new BankException("user not found exception", HttpStatus.NOT_FOUND));
+                    BankAccount bankAccount = bankAccountRepository.findById(1).orElseThrow(() -> new BankException("user not found exception", HttpStatus.NOT_FOUND));
                     double totalServiceCharge = bankAccount.getBalance() + serviceCharge;
                     bankAccount.setBalance(totalServiceCharge);
                     bankAccountRepository.save(bankAccount);
 
                     accountRepository.save(senderAccount);
                     accountRepository.save(receiverAccount);
-                    return new ResponseEntity<>("Transfer success with service charge : "+serviceCharge, HttpStatus.OK);
 
+
+                    return new ResponseEntity<>("Transfer success with service charge : "+serviceCharge, HttpStatus.OK);
                 } catch (Exception e) {
                     e.getMessage();
                      throw new BankException("no enough balance",HttpStatus.BAD_REQUEST);
                 }
-
             } else {
                 throw new BankException("Insufficient balance ! please enter valid balance",HttpStatus.BAD_REQUEST);
             }
@@ -117,8 +117,6 @@ public class AccountServices {
             throw new BankException("Pin not valid",HttpStatus.UNAUTHORIZED);
         }
     }
-
-
 
     public ResponseEntity<String> checkBalance() throws Exception{
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
