@@ -25,8 +25,7 @@ public class AdminServices {
     public ResponseEntity<ServiceChargeDto> insertServiceCharge(ServiceChargeDto serviceChargeDto) throws BankException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
-        User admin = userRepository.findByEmail(email)
-                .orElseThrow(()->new BankException("No admin found", HttpStatus.NOT_FOUND));
+        User admin = userRepository.findByEmail(email).orElseThrow(()->new BankException("No admin found", HttpStatus.NOT_FOUND));
         if (admin!=null){
             ServiceCharge serviceCharge = this.modelMapper.map(serviceChargeDto,ServiceCharge.class);
             serviceChargeRepo.save(serviceCharge);
