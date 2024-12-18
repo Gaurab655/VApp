@@ -1,12 +1,7 @@
 package VApp.VApp.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-import java.time.LocalDateTime;
+import lombok.*;
 
 @Entity
 @Getter
@@ -21,4 +16,10 @@ public class BankAccount {
     private String name ;
     private double balance;
 
+    public BankAccount(Account account) {
+        this.id=account.getId();
+        this.accountNumber = account.getAccountNumber();
+        this.name=account.getFullName();
+        this.balance=account.getBalance();
+    }
 }

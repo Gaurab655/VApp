@@ -25,7 +25,7 @@ public class AccountServices {
     private final ServiceChargeRepo serviceChargeRepo;
     private final TransactionRepo transactionRepo;
 
-    @Transactional
+
     public ResponseEntity<String> creditAccount(DebitCreditDto debitCreditDto) throws Exception{
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
@@ -41,7 +41,7 @@ public class AccountServices {
            }
         }
 
-    @Transactional(rollbackFor =Exception.class)
+
     public ResponseEntity<String> debitAccount(DebitCreditDto debitCreditDto) throws Exception {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
@@ -58,7 +58,7 @@ public class AccountServices {
         return new ResponseEntity<>("Balance Updated"+updatedBalance,HttpStatus.OK);
     }
 
-    @Transactional(rollbackFor = BankException.class)
+    @Transactional
     public ResponseEntity<String> transferAmount(TransferBalanceDto transferBalanceDto) throws BankException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();

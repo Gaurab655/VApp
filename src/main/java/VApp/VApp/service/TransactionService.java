@@ -1,14 +1,12 @@
 package VApp.VApp.service;
 
 import VApp.VApp.dto.requestDto.TransactionDto;
-import VApp.VApp.entity.Transaction;
 import VApp.VApp.entity.User;
 import VApp.VApp.exception.BankException;
 import VApp.VApp.repository.AccountRepository;
 import VApp.VApp.repository.TransactionRepo;
 import VApp.VApp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -16,16 +14,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class TransactionService {
-    private final AccountRepository accountRepository;
     private final UserRepository userRepository;
     private final TransactionRepo transactionRepo;
 
-    public ResponseEntity<?> transactionDetails(Transaction transaction) throws BankException {
+    public ResponseEntity<?> transactionDetails() throws BankException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
 
@@ -44,4 +40,4 @@ public class TransactionService {
         }
 
         throw new BankException("Admin user not found", HttpStatus.NOT_FOUND);
-    }
+    }}

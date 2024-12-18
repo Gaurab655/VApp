@@ -1,7 +1,6 @@
 package VApp.VApp.config;
 
 import VApp.VApp.service.UserDetailsServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -26,7 +25,6 @@ public class SpringSecurity  {
                         .requestMatchers("/userAndAccount/**", "/public/**", "/user/**", "/swagger-ui/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/account/**").hasRole("USER")
-                        .requestMatchers("/swagger-ui/**").permitAll()
                 )
                 .httpBasic(httpBasic -> {});
         return http.build();

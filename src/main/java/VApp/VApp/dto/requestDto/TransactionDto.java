@@ -1,25 +1,33 @@
 package VApp.VApp.dto.requestDto;
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
+import VApp.VApp.entity.BankAccount;
+import VApp.VApp.entity.Transaction;
+import lombok.*;
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class TransactionDto {
 
     private int id;
     private LocalDateTime dateTime;
     private String transactionType;
-    private Long beneficiaryAccountId;
-    private String beneficiaryAccountName;
     private double amount;
     private double serviceCharge;
     private double totalAmount;
     private String status;
+    private BankAccount beneficiaryAccount;
+
+    public TransactionDto(Transaction transaction) {
+        this.id = transaction.getId();
+        this.dateTime = transaction.getDateTime();
+        this.transactionType = transaction.getTransactionType();
+        this.amount = transaction.getAmount();
+        this.serviceCharge = transaction.getServiceCharge();
+        this.totalAmount = transaction.getTotalAmount();
+        this.status = transaction.getStatus();
+        if (transaction.getBeneficiaryAccount() != null) {
+            this.beneficiaryAccount = new BankAccount(transaction.getBeneficiaryAccount());
+        }
+    }
 }

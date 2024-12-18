@@ -28,9 +28,9 @@ public class AdminController {
     public ResponseEntity<ServiceChargeDto> serviceCharges (@RequestBody ServiceChargeDto serviceChargeDto) throws BankException {
       return adminServices.insertServiceCharge(serviceChargeDto);
     }
+
     @GetMapping("/check-transaction")
     public ResponseEntity<?> checkTransaction() throws BankException {
        return transactionService.transactionDetails();
     }
-
 }
