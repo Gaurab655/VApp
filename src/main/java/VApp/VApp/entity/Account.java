@@ -38,4 +38,5 @@ public class Account {
     @JoinColumn(name = "user_id")
     @JsonIgnore
     private User user;
+
 }

@@ -1,7 +1,6 @@
 package VApp.VApp.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,11 +15,19 @@ import lombok.Setter;
 public class ServiceCharge {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id ;
-    @NotNull
-    private String amountRange;
-    @NotNull
+    private Long id;
+
+    @Column(name = "min_amount", nullable = false)
+    private double minAmount;
+
+    @Column(name = "max_amount", nullable = false)
+    private double maxAmount;
+
+    @Column(nullable = false)
     private double discount;
-    @NotNull
+
+    @Column(nullable = false)
     private String type;
+
 }
+

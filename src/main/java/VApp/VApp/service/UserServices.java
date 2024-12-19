@@ -27,8 +27,7 @@ public class UserServices {
 
     public ResponseEntity<List<UserResponseDto>> getUsers() {
         List<User> users = userRepository.findAll();
-        List<UserResponseDto> result = users.stream()
-                .map((user) -> UserResponseDto.fromEntity(user, modelMapper)).toList();
+        List<UserResponseDto> result = users.stream().map((user) -> UserResponseDto.fromEntity(user, modelMapper)).toList();
         return new ResponseEntity<>(result, HttpStatus.FOUND);
     }
 
