@@ -15,14 +15,14 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SpringSecurity  {
     private final UserDetailsServiceImpl userDetailsService;
     SpringSecurity(UserDetailsServiceImpl userDetailsService){
-        this.userDetailsService=userDetailsService;
+        this.userDetailsService = userDetailsService;
     }
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/userAndAccount/**", "/public/**", "/user/**", "/swagger-ui/**").permitAll()
+                        .requestMatchers("/userAndAccount/**", "/public/**", "/user/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/account/**").hasRole("USER")
                 )

@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
-public class AccountServices {
+public class AccountService {
     private final AccountRepository accountRepository;
     private final UserRepository userRepository;
     private final BankAccountRepository bankAccountRepository;
@@ -71,8 +71,8 @@ public class AccountServices {
         Account receiverAccount = accountRepository.findByAccountNumber(receiverAccountNumber)
                 .orElseThrow(() -> new BankException("Account not found with account number " + receiverAccountNumber,HttpStatus.NOT_FOUND));
 
-        if (!senderAccount.equals(receiverAccount)){
-            throw new BankException("Enter different account number",HttpStatus.BAD_REQUEST);
+        if (senderAccount.equals(receiverAccount)){
+            throw new BankException("same account number! Enter different account number",HttpStatus.BAD_REQUEST);
         }
         double receiverBalance = receiverAccount.getBalance();
         if (senderAccount.getPin() .equals(transferBalanceDto.getPin()) ) {
@@ -112,6 +112,7 @@ public class AccountServices {
                     transaction.setServiceCharge(serviceCharge);
                     transaction.setTotalAmount(transferBalanceDto.getBalance()+serviceCharge);
                     transaction.setBeneficiaryAccount(receiverAccount);
+                    transaction.setSenderAccount(senderAccount.getAccountNumber());
                     transactionRepo.save(transaction);
                 }
             } else {
@@ -123,7 +124,7 @@ public class AccountServices {
         }
     }
 
-    public ResponseEntity<String> checkBalance() throws Exception{
+    public ResponseEntity<String> checkBalance(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
 

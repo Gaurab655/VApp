@@ -1,9 +1,5 @@
 package VApp.VApp;
 
-import VApp.VApp.initializer.ConstBankAccount;
-import VApp.VApp.repository.BankAccountRepository;
-import VApp.VApp.service.AccountServices;
-import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

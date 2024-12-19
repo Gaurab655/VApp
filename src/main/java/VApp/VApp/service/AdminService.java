@@ -1,6 +1,7 @@
 package VApp.VApp.service;
 
 import VApp.VApp.dto.requestDto.ServiceChargeDto;
+import VApp.VApp.dto.responseDto.UserResponseDto;
 import VApp.VApp.entity.ServiceCharge;
 import VApp.VApp.entity.User;
 import VApp.VApp.exception.BankException;
@@ -14,9 +15,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
-public class AdminServices {
+public class AdminService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
     private final ServiceChargeRepo serviceChargeRepo;
@@ -33,4 +36,9 @@ public class AdminServices {
         }
         return null;
     }
-}
+
+    public ResponseEntity<List<UserResponseDto>> getUsers() {
+        List<User> users = userRepository.findAll();
+        List<UserResponseDto> result = users.stream().map((user) -> UserResponseDto.fromEntity(user, modelMapper)).toList();
+        return new ResponseEntity<>(result, HttpStatus.FOUND);
+    }}

@@ -21,6 +21,7 @@ public class Transaction {
     private double serviceCharge;
     private double totalAmount;
     private String status;
+    private Long senderAccount;
     @ManyToOne
     @JoinColumn(name = "beneficiary_account", referencedColumnName = "id", nullable = false)
     @JsonIgnore
