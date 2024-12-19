@@ -5,7 +5,6 @@ import VApp.VApp.dto.responseDto.UserResponseDto;
 import VApp.VApp.exception.BankException;
 import VApp.VApp.service.AdminService;
 import VApp.VApp.service.TransactionService;
-import VApp.VApp.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +14,6 @@ import java.util.List;
 @RequestMapping("/admin")
 @RequiredArgsConstructor
 public class AdminController {
-    private final UserService userService;
   private final AdminService adminService;
   private final TransactionService transactionService;
 

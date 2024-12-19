@@ -22,7 +22,7 @@ public class SpringSecurity  {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/userAndAccount/**", "/public/**", "/user/**").permitAll()
+                        .requestMatchers("/userAndAccount/**", "/public/**", "/user/**", "/swagger-ui/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/account/**").hasRole("USER")
                 )
