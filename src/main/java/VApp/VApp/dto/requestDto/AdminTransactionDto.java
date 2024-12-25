@@ -1,5 +1,4 @@
 package VApp.VApp.dto.requestDto;
-import VApp.VApp.entity.Account;
 import VApp.VApp.entity.BankAccount;
 import VApp.VApp.entity.Transaction;
 import lombok.*;
@@ -9,7 +8,6 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 public class AdminTransactionDto {
-
     private int id;
     private LocalDateTime dateTime;
     private String transactionType;

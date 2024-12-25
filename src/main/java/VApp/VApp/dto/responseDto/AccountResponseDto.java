@@ -9,5 +9,4 @@ public class AccountResponseDto {
     private Long accountNumber;
     private String fullName;
     private double balance;
-
 }

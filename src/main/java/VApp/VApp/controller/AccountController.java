@@ -14,7 +14,7 @@ public class AccountController {
     private final AccountService accountService;
 
     @PostMapping("/credit")
-    public ResponseEntity<?> credit(@RequestBody DebitCreditDto debitCreditDto) throws Exception {
+    public ResponseEntity<String> credit(@RequestBody DebitCreditDto debitCreditDto) throws Exception {
         return accountService.creditAccount(debitCreditDto);
     }
     @PostMapping("/debit")
@@ -29,6 +29,4 @@ public class AccountController {
     public ResponseEntity<?> checkBalance() throws Exception{
         return accountService.checkBalance();
     }
-
-
 }

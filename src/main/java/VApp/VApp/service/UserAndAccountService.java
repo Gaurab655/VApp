@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class UserAndAccountService {
-
     private final AccountRepository accountRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;

@@ -37,7 +37,7 @@ public class AccountService {
                accountRepository.save(userAccount);
                return  new ResponseEntity<>("Your updated balance is: " + updatedBalance, HttpStatus.OK);
            }else {
-               throw new BankException("Please enter valid pin",HttpStatus.FORBIDDEN);
+               return new ResponseEntity<>("Please enter valid pin",HttpStatus.FORBIDDEN);
            }
         }
 
@@ -104,7 +104,7 @@ public class AccountService {
                 } catch (Exception e) {
                     transaction.setStatus("failed");
                     System.out.println(e.getMessage());
-                     throw new BankException("no enough balance",HttpStatus.BAD_REQUEST);
+                     return new ResponseEntity<>("no enough balance",HttpStatus.NOT_FOUND);
                 }finally {
                     transaction.setDateTime(LocalDateTime.now());
                     transaction.setTransactionType("transfer");
@@ -116,10 +116,10 @@ public class AccountService {
                     transactionRepo.save(transaction);
                 }
             } else {
-                throw new BankException("Insufficient balance ! please enter valid balance",HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("insufficient balance",HttpStatus.BAD_REQUEST);
             }
         } else {
-            throw new BankException("Pin not valid",HttpStatus.UNAUTHORIZED);
+             return new ResponseEntity<>("Pin not valid",HttpStatus.UNAUTHORIZED);
 
         }
     }
@@ -127,10 +127,10 @@ public class AccountService {
     public ResponseEntity<String> checkBalance(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
-
             Account account = userRepository.findByEmail(email).get().getAccount();
-            double balance  = account.getBalance();
-            String message  = "Your total Balance is : "+balance;
-            return new ResponseEntity<>(message,HttpStatus.FOUND);
+            double balance = account.getBalance();
+            String message = "Your total Balance is : " + balance;
+            return new ResponseEntity<>(message, HttpStatus.FOUND);
 }
+
 }
