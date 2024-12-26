@@ -1,5 +1,4 @@
 package VApp.VApp.service;
-
 import VApp.VApp.dto.requestDto.DebitCreditDto;
 import VApp.VApp.dto.requestDto.TransferBalanceDto;
 import VApp.VApp.entity.*;
@@ -13,7 +12,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDateTime;
 
 @Service
@@ -24,7 +22,6 @@ public class AccountService {
     private final BankAccountRepository bankAccountRepository;
     private final ServiceChargeRepo serviceChargeRepo;
     private final TransactionRepo transactionRepo;
-
 
     public ResponseEntity<String> creditAccount(DebitCreditDto debitCreditDto) throws Exception{
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -120,7 +117,6 @@ public class AccountService {
             }
         } else {
              return new ResponseEntity<>("Pin not valid",HttpStatus.UNAUTHORIZED);
-
         }
     }
 

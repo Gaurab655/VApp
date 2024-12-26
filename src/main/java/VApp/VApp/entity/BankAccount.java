@@ -12,9 +12,10 @@ import lombok.*;
 public class BankAccount {
     @Id
     private int id;
-    private Long accountNumber;
     private String name ;
     private double balance;
+    private Long accountNumber;
+
 
     public BankAccount(Account account) {
         this.id=account.getId();

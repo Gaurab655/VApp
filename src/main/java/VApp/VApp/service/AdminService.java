@@ -20,8 +20,8 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class AdminService {
-    private final UserRepository userRepository;
     private final ModelMapper modelMapper;
+    private final UserRepository userRepository;
     private final ServiceChargeRepo serviceChargeRepo;
 
 
