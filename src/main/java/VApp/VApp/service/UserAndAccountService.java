@@ -21,6 +21,7 @@ public class UserAndAccountService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
 
+
     public ResponseEntity<String> newUserAndAccount(RegisterAndAccountDto registerAndAccountDto) throws BankException {
         if (userRepository.existsByEmail(registerAndAccountDto.getEmail())) {
             throw new BankException("Enter different email", HttpStatus.BAD_REQUEST);

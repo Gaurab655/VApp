@@ -3,6 +3,7 @@ package VApp.VApp.controller;
 import VApp.VApp.dto.requestDto.DebitCreditDto;
 import VApp.VApp.dto.requestDto.TransferBalanceDto;
 import VApp.VApp.service.AccountService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +23,7 @@ public class AccountController {
         return accountService.debitAccount(debitCreditDto);
     }
     @PostMapping("/transferAmount")
-    public ResponseEntity<?> transfer(@RequestBody TransferBalanceDto transferBalanceDto) throws Exception{
+    public ResponseEntity<?> transfer(@Valid @RequestBody TransferBalanceDto transferBalanceDto) throws Exception{
         return accountService.transferAmount(transferBalanceDto);
     }
     @GetMapping("/check-balance")
