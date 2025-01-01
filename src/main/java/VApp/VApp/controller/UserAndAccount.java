@@ -1,6 +1,7 @@
 package VApp.VApp.controller;
 
 import VApp.VApp.dto.requestDto.RegisterAndAccountDto;
+import VApp.VApp.exception.BankException;
 import VApp.VApp.service.UserAndAccountService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +16,7 @@ public class UserAndAccount {
     private final UserAndAccountService userAndAccountService;
 
     @PostMapping("/newUser")
-    public ResponseEntity<RegisterAndAccountDto> createUser(@Valid @RequestBody RegisterAndAccountDto registerAndAccountDto){
+    public ResponseEntity<String> createUser(@Valid @RequestBody RegisterAndAccountDto registerAndAccountDto) throws BankException {
         return userAndAccountService.newUserAndAccount(registerAndAccountDto);
     }
 }

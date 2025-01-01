@@ -13,7 +13,7 @@ public class ConstBankAccount {
 
 @PostConstruct
     public void createBankAccount(){
-        if (bankAccountRepository.findById(1).isEmpty()){
+        if (bankAccountRepository.findAll().isEmpty()){
             BankAccount bankAccount = new BankAccount();
             bankAccount.setId(1);
             bankAccount.setAccountNumber(1234565789L);

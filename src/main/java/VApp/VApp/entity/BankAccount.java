@@ -3,6 +3,9 @@ package VApp.VApp.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.lang.reflect.Type;
+import java.util.UUID;
+
 @Entity
 @Getter
 @Setter
@@ -11,6 +14,7 @@ import lombok.*;
 @Table(name = "bank")
 public class BankAccount {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name ;
     private double balance;

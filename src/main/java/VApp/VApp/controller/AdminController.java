@@ -22,7 +22,6 @@ public class AdminController {
         return adminService.getUsers();
     }
 
-
     @PostMapping
     public ResponseEntity<ServiceChargeDto> serviceCharges (@RequestBody ServiceChargeDto serviceChargeDto) throws BankException {
       return adminService.insertServiceCharge(serviceChargeDto);

@@ -11,17 +11,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
 public class AccountService {
-    private final AccountRepository accountRepository;
-    private final UserRepository userRepository;
     private final BankAccountRepository bankAccountRepository;
+    private final AccountRepository accountRepository;
     private final ServiceChargeRepo serviceChargeRepo;
     private final TransactionRepo transactionRepo;
+    private final UserRepository userRepository;
 
     public ResponseEntity<String> creditAccount(DebitCreditDto debitCreditDto) throws Exception{
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -55,7 +54,6 @@ public class AccountService {
         return new ResponseEntity<>("Balance Updated"+updatedBalance,HttpStatus.OK);
     }
 
-    @Transactional
     public ResponseEntity<String> transferAmount(TransferBalanceDto transferBalanceDto) throws BankException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
@@ -72,13 +70,20 @@ public class AccountService {
             throw new BankException("same account number! Enter different account number",HttpStatus.BAD_REQUEST);
         }
         double receiverBalance = receiverAccount.getBalance();
-        if (senderAccount.getPin() .equals(transferBalanceDto.getPin()) ) {
+        if (!senderAccount.getPin() .equals(transferBalanceDto.getPin()) ) {
+            return new ResponseEntity<>("Pin not valid",HttpStatus.UNAUTHORIZED);
+        }
+
             double sendingBalance = transferBalanceDto.getBalance();
-            if (senderAccount.getBalance() >= sendingBalance && sendingBalance > 0) {
-                ServiceCharge serviceChargeEntity = serviceChargeRepo.findByAmountRange(sendingBalance).orElseThrow(()->new BankException("Cannot complete the transaction",HttpStatus.INTERNAL_SERVER_ERROR));
+            if (!(senderAccount.getBalance() >= sendingBalance && sendingBalance > 0)) {
+                return new ResponseEntity<>("insufficient balance",HttpStatus.BAD_REQUEST);
+            }
+
+                ServiceCharge serviceChargeEntity = serviceChargeRepo.findByAmountRange(sendingBalance)
+                        .orElseThrow(()->new BankException("Cannot complete the transaction",HttpStatus.INTERNAL_SERVER_ERROR));
                 double serviceCharge = serviceChargeEntity.getDiscount();
 
-                if (serviceChargeEntity.getType().equalsIgnoreCase("percent")){
+                if (serviceChargeEntity.getType().equalsIgnoreCase("PERCENT")){
                     serviceCharge = (sendingBalance*serviceCharge)/100;
                 }
                 Transaction transaction = new Transaction();
@@ -112,13 +117,7 @@ public class AccountService {
                     transaction.setSenderAccount(senderAccount.getAccountNumber());
                     transactionRepo.save(transaction);
                 }
-            } else {
-                return new ResponseEntity<>("insufficient balance",HttpStatus.BAD_REQUEST);
             }
-        } else {
-             return new ResponseEntity<>("Pin not valid",HttpStatus.UNAUTHORIZED);
-        }
-    }
 
     public ResponseEntity<String> checkBalance(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
