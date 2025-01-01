@@ -15,7 +15,7 @@ import lombok.Setter;
 public class ServiceCharge {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int id;
 
     @Column(name = "min_amount", nullable = false)
     private double minAmount;

@@ -1,14 +1,12 @@
 package VApp.VApp.service;
 import VApp.VApp.entity.User;
 import VApp.VApp.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 @Component
-
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final UserRepository userRepository;
@@ -25,7 +23,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             return org.springframework.security.core.userdetails.User.builder()
                     .username(user.getEmail())
                     .password(user.getPassword())
-                    .roles(user.getRoles().toArray(new String[0]))
+                    .roles(String.valueOf(user.getRole()))
                     .build();
     }
 }

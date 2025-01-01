@@ -1,18 +1,21 @@
 package VApp.VApp.dto.requestDto;
 
+import VApp.VApp.enums.Roles;
+import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-import java.util.List;
+import java.math.BigDecimal;
+
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class RegisterAndAccountDto {
+    @Column(unique = true)
     @NotNull
     private String email;
     @NotNull
@@ -20,11 +23,13 @@ public class RegisterAndAccountDto {
     @NotNull
     private String fullName;
     @NotNull
-    private double balance;
+    private BigDecimal balance;
     @NotNull
     @Min(value = 1000,message = "PIN must be at least 1000")
     @Max(value = 9999,message = "PIN must be at most 9999")
     private Integer pin;
+
+    @Enumerated(EnumType.STRING)
     @NotNull
-    private List<String> roles;
+    private Roles role;
 }

@@ -3,7 +3,6 @@ package VApp.VApp.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.time.LocalDateTime;
 
 @Entity
@@ -21,6 +20,7 @@ public class Transaction {
     private double serviceCharge;
     private double totalAmount;
     private String status;
+    private Long senderAccount;
     @ManyToOne
     @JoinColumn(name = "beneficiary_account", referencedColumnName = "id", nullable = false)
     @JsonIgnore

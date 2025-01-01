@@ -1,9 +1,8 @@
 package VApp.VApp.service;
 
-import VApp.VApp.dto.requestDto.TransactionDto;
+import VApp.VApp.dto.requestDto.AdminTransactionDto;
 import VApp.VApp.entity.User;
 import VApp.VApp.exception.BankException;
-import VApp.VApp.repository.AccountRepository;
 import VApp.VApp.repository.TransactionRepo;
 import VApp.VApp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -30,9 +29,9 @@ public class TransactionService {
 
         if (admin != null) {
 
-            List<TransactionDto> transactions = transactionRepo.findAll()
+            List<AdminTransactionDto> transactions = transactionRepo.findAll()
                     .stream()
-                    .map(transaction -> new TransactionDto(transaction))
+                    .map(transaction -> new AdminTransactionDto(transaction))
                     .peek(dto -> dto.setStatus(dto.getStatus().toUpperCase()))
                     .toList();
 

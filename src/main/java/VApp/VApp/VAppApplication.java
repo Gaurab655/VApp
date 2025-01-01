@@ -1,17 +1,12 @@
 package VApp.VApp;
 
-import VApp.VApp.initializer.ConstBankAccount;
-import VApp.VApp.repository.BankAccountRepository;
-import VApp.VApp.service.AccountServices;
-import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
+
 
 @SpringBootApplication
-@EnableTransactionManagement
 public class VAppApplication {
 
     public static void main(String[] args) {
@@ -21,4 +16,5 @@ public class VAppApplication {
 	public ModelMapper modelMapper(){
 		return new ModelMapper();
     }
+
 }

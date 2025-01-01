@@ -1,5 +1,4 @@
 package VApp.VApp.service;
-
 import VApp.VApp.dto.requestDto.DebitCreditDto;
 import VApp.VApp.dto.requestDto.TransferBalanceDto;
 import VApp.VApp.entity.*;
@@ -12,19 +11,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
-public class AccountServices {
-    private final AccountRepository accountRepository;
-    private final UserRepository userRepository;
+public class AccountService {
     private final BankAccountRepository bankAccountRepository;
+    private final AccountRepository accountRepository;
     private final ServiceChargeRepo serviceChargeRepo;
     private final TransactionRepo transactionRepo;
-
+    private final UserRepository userRepository;
 
     public ResponseEntity<String> creditAccount(DebitCreditDto debitCreditDto) throws Exception{
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -37,7 +33,7 @@ public class AccountServices {
                accountRepository.save(userAccount);
                return  new ResponseEntity<>("Your updated balance is: " + updatedBalance, HttpStatus.OK);
            }else {
-               throw new BankException("Please enter valid pin",HttpStatus.FORBIDDEN);
+               return new ResponseEntity<>("Please enter valid pin",HttpStatus.FORBIDDEN);
            }
         }
 
@@ -58,7 +54,6 @@ public class AccountServices {
         return new ResponseEntity<>("Balance Updated"+updatedBalance,HttpStatus.OK);
     }
 
-    @Transactional
     public ResponseEntity<String> transferAmount(TransferBalanceDto transferBalanceDto) throws BankException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
@@ -71,17 +66,24 @@ public class AccountServices {
         Account receiverAccount = accountRepository.findByAccountNumber(receiverAccountNumber)
                 .orElseThrow(() -> new BankException("Account not found with account number " + receiverAccountNumber,HttpStatus.NOT_FOUND));
 
-        if (!senderAccount.equals(receiverAccount)){
-            throw new BankException("Enter different account number",HttpStatus.BAD_REQUEST);
+        if (senderAccount.equals(receiverAccount)){
+            throw new BankException("same account number! Enter different account number",HttpStatus.BAD_REQUEST);
         }
         double receiverBalance = receiverAccount.getBalance();
-        if (senderAccount.getPin() .equals(transferBalanceDto.getPin()) ) {
+        if (!senderAccount.getPin() .equals(transferBalanceDto.getPin()) ) {
+            return new ResponseEntity<>("Pin not valid",HttpStatus.UNAUTHORIZED);
+        }
+
             double sendingBalance = transferBalanceDto.getBalance();
-            if (senderAccount.getBalance() >= sendingBalance && sendingBalance > 0) {
-                ServiceCharge serviceChargeEntity = serviceChargeRepo.findByAmountRange(sendingBalance).orElseThrow(()->new BankException("Cannot complete the transaction",HttpStatus.INTERNAL_SERVER_ERROR));
+            if (!(senderAccount.getBalance() >= sendingBalance && sendingBalance > 0)) {
+                return new ResponseEntity<>("insufficient balance",HttpStatus.BAD_REQUEST);
+            }
+
+                ServiceCharge serviceChargeEntity = serviceChargeRepo.findByAmountRange(sendingBalance)
+                        .orElseThrow(()->new BankException("Cannot complete the transaction",HttpStatus.INTERNAL_SERVER_ERROR));
                 double serviceCharge = serviceChargeEntity.getDiscount();
 
-                if (serviceChargeEntity.getType().equalsIgnoreCase("percent")){
+                if (serviceChargeEntity.getType().equalsIgnoreCase("PERCENT")){
                     serviceCharge = (sendingBalance*serviceCharge)/100;
                 }
                 Transaction transaction = new Transaction();
@@ -104,7 +106,7 @@ public class AccountServices {
                 } catch (Exception e) {
                     transaction.setStatus("failed");
                     System.out.println(e.getMessage());
-                     throw new BankException("no enough balance",HttpStatus.BAD_REQUEST);
+                     return new ResponseEntity<>("no enough balance",HttpStatus.NOT_FOUND);
                 }finally {
                     transaction.setDateTime(LocalDateTime.now());
                     transaction.setTransactionType("transfer");
@@ -112,24 +114,18 @@ public class AccountServices {
                     transaction.setServiceCharge(serviceCharge);
                     transaction.setTotalAmount(transferBalanceDto.getBalance()+serviceCharge);
                     transaction.setBeneficiaryAccount(receiverAccount);
+                    transaction.setSenderAccount(senderAccount.getAccountNumber());
                     transactionRepo.save(transaction);
                 }
-            } else {
-                throw new BankException("Insufficient balance ! please enter valid balance",HttpStatus.BAD_REQUEST);
             }
-        } else {
-            throw new BankException("Pin not valid",HttpStatus.UNAUTHORIZED);
 
-        }
-    }
-
-    public ResponseEntity<String> checkBalance() throws Exception{
+    public ResponseEntity<String> checkBalance(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
-
             Account account = userRepository.findByEmail(email).get().getAccount();
-            double balance  = account.getBalance();
-            String message  = "Your total Balance is : "+balance;
-            return new ResponseEntity<>(message,HttpStatus.FOUND);
+            double balance = account.getBalance();
+            String message = "Your total Balance is : " + balance;
+            return new ResponseEntity<>(message, HttpStatus.FOUND);
 }
+
 }
