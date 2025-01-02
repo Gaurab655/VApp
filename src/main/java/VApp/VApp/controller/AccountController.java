@@ -18,16 +18,19 @@ public class AccountController {
     public ResponseEntity<String> credit(@RequestBody DebitCreditDto debitCreditDto) throws Exception {
         return accountService.creditAccount(debitCreditDto);
     }
+
     @PostMapping("/debit")
-    public ResponseEntity<?> debit(@RequestBody DebitCreditDto debitCreditDto) throws Exception{
+    public ResponseEntity<?> debit(@RequestBody DebitCreditDto debitCreditDto) throws Exception {
         return accountService.debitAccount(debitCreditDto);
     }
+
     @PostMapping("/transferAmount")
-    public ResponseEntity<?> transfer(@Valid @RequestBody TransferBalanceDto transferBalanceDto) throws Exception{
+    public ResponseEntity<?> transfer(@Valid @RequestBody TransferBalanceDto transferBalanceDto) throws Exception {
         return accountService.transferAmount(transferBalanceDto);
     }
+
     @GetMapping("/check-balance")
-    public ResponseEntity<?> checkBalance() throws Exception{
+    public ResponseEntity<?> checkBalance() {
         return accountService.checkBalance();
     }
 }

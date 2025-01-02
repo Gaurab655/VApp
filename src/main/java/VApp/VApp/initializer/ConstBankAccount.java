@@ -11,9 +11,9 @@ import org.springframework.stereotype.Component;
 public class ConstBankAccount {
     private final BankAccountRepository bankAccountRepository;
 
-@PostConstruct
-    public void createBankAccount(){
-        if (bankAccountRepository.findAll().isEmpty()){
+    @PostConstruct
+    public void createBankAccount() {
+        if (bankAccountRepository.findAll().isEmpty()) {
             BankAccount bankAccount = new BankAccount();
             bankAccount.setId(1);
             bankAccount.setAccountNumber(1234565789L);

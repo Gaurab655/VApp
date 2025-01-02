@@ -5,9 +5,10 @@ import jakarta.persistence.Column;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.*;
-import lombok.*;
-
-import java.math.BigDecimal;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 
 @Getter
@@ -16,20 +17,22 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class RegisterAndAccountDto {
     @Column(unique = true)
-    @NotNull
+    @Email(message = "Insert valid email")
+    @NotNull(message = "please insert your email")
     private String email;
-    @NotNull
+    @NotNull(message = "please insert your password")
     private String password;
-    @NotNull
+    @NotNull(message = "please Insert your full name")
     private String fullName;
-    @NotNull
-    private BigDecimal balance;
-    @NotNull
-    @Min(value = 1000,message = "PIN must be at least 1000")
-    @Max(value = 9999,message = "PIN must be at most 9999")
+
+    @PositiveOrZero(message = "Balance cannot be negative")
+    private double balance;
+    @NotNull(message = "Insert pin")
+    @Min(value = 1000, message = "PIN must be a 4-digit number")
+    @Max(value = 9999, message = "PIN must be a 4-digit number")
     private Integer pin;
 
     @Enumerated(EnumType.STRING)
-    @NotNull
+    @NotNull(message = "insert your role")
     private Roles role;
 }

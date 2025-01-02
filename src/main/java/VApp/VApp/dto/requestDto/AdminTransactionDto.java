@@ -1,7 +1,11 @@
 package VApp.VApp.dto.requestDto;
+
 import VApp.VApp.entity.BankAccount;
 import VApp.VApp.entity.Transaction;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
 
 @Getter
@@ -27,7 +31,7 @@ public class AdminTransactionDto {
         this.serviceCharge = transaction.getServiceCharge();
         this.totalAmount = transaction.getTotalAmount();
         this.status = transaction.getStatus();
-        this.sendingAccount=transaction.getSenderAccount();
+        this.sendingAccount = transaction.getSenderAccount();
 
         if (transaction.getBeneficiaryAccount() != null) {
             this.beneficiaryAccount = new BankAccount(transaction.getBeneficiaryAccount());

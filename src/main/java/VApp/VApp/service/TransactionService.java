@@ -39,4 +39,5 @@ public class TransactionService {
         }
 
         throw new BankException("Admin user not found", HttpStatus.NOT_FOUND);
-    }}
+    }
+}
