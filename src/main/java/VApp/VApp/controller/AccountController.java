@@ -25,7 +25,7 @@ public class AccountController {
     }
 
     @PostMapping("/transferAmount")
-    public ResponseEntity<?> transfer(@Valid @RequestBody TransferBalanceDto transferBalanceDto) throws Exception {
+    public ResponseEntity<String> transfer(@Valid @RequestBody TransferBalanceDto transferBalanceDto) throws Exception {
         return accountService.transferAmount(transferBalanceDto);
     }
 

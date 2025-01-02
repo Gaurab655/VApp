@@ -2,6 +2,7 @@ package VApp.VApp.exception.handler;
 
 import VApp.VApp.exception.BankException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import jakarta.validation.UnexpectedTypeException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
