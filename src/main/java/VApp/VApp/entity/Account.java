@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Entity
 @Getter
 @Setter
@@ -22,7 +24,7 @@ public class Account {
 
     private String fullName;
 
-    private double balance;
+    private BigDecimal balance;
 
     private Integer pin;
 

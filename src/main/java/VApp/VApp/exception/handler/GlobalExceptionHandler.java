@@ -2,7 +2,6 @@ package VApp.VApp.exception.handler;
 
 import VApp.VApp.exception.BankException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
-import jakarta.validation.UnexpectedTypeException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -57,8 +56,8 @@ public class GlobalExceptionHandler {
                 return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
             }
         }
-
-        String errorMessage = "Malformed JSON or invalid input: " + e.getMessage();
+        String errorMessage = "Enter valid Input \n" + e.getMessage();
         return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
     }
+
 }

@@ -6,6 +6,8 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+
 @Component
 @RequiredArgsConstructor
 public class ConstBankAccount {
@@ -18,7 +20,7 @@ public class ConstBankAccount {
             bankAccount.setId(1);
             bankAccount.setAccountNumber(1234565789L);
             bankAccount.setName("Global Ime Bank Ltd");
-            bankAccount.setBalance(0.0);
+            bankAccount.setBalance(new BigDecimal(0));
             bankAccountRepository.save(bankAccount);
             System.out.println("Bank account created successfully");
         }

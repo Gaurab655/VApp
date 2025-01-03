@@ -20,7 +20,7 @@ public class AdminController {
 
     @GetMapping("/all-Users")
     public ResponseEntity<List<UserResponseDto>> getAllUsers() {
-        return adminService.getUsers();
+        return ResponseEntity.ok(adminService.getUsers());
     }
 
     @PostMapping

@@ -37,9 +37,9 @@ public class AdminService {
         return null;
     }
 
-    public ResponseEntity<List<UserResponseDto>> getUsers() {
+    public List<UserResponseDto> getUsers() {
         List<User> users = userRepository.findAll();
         List<UserResponseDto> result = users.stream().map((user) -> UserResponseDto.fromEntity(user, modelMapper)).toList();
-        return new ResponseEntity<>(result, HttpStatus.FOUND);
+        return result;
     }
 }

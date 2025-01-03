@@ -24,7 +24,7 @@ public class ServiceCharge {
     private double maxAmount;
 
     @Column(nullable = false)
-    private double discount;
+    private double charge;
 
     @Column(nullable = false)
     private String type;

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/userAndAccount")
 @RequiredArgsConstructor
-public class UserAndAccount {
+public class CreateAccountController {
     private final UserAndAccountService userAndAccountService;
 
     @PostMapping("/newUser")
