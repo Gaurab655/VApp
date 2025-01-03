@@ -15,7 +15,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class RegisterAndAccountDto {
+public class CreateAccountDto {
     @Column(unique = true)
     @Email(message = "Insert valid email")
     @NotNull(message = "please insert your email")
@@ -24,7 +24,6 @@ public class RegisterAndAccountDto {
     private String password;
     @NotNull(message = "please Insert your full name")
     private String fullName;
-
     @PositiveOrZero(message = "Balance cannot be negative")
     private double balance;
     @NotNull(message = "Insert pin")

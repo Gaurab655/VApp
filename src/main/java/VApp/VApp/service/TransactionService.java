@@ -1,6 +1,6 @@
 package VApp.VApp.service;
 
-import VApp.VApp.dto.requestDto.AdminTransactionDto;
+import VApp.VApp.dto.requestDto.TransactionDto;
 import VApp.VApp.entity.User;
 import VApp.VApp.exception.BankException;
 import VApp.VApp.repository.TransactionRepo;
@@ -29,9 +29,9 @@ public class TransactionService {
 
         if (admin != null) {
 
-            List<AdminTransactionDto> transactions = transactionRepo.findAll()
+            List<TransactionDto> transactions = transactionRepo.findAll()
                     .stream()
-                    .map(transaction -> new AdminTransactionDto(transaction))
+                    .map(transaction -> new TransactionDto(transaction))
                     .peek(dto -> dto.setStatus(dto.getStatus().toUpperCase()))
                     .toList();
 

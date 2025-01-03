@@ -17,16 +17,16 @@ public class ServiceCharge {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "min_amount", nullable = false)
+    @Column(name = "min_amount")
     private double minAmount;
 
-    @Column(name = "max_amount", nullable = false)
+    @Column(name = "max_amount")
     private double maxAmount;
 
-    @Column(nullable = false)
+
     private double charge;
 
-    @Column(nullable = false)
+
     private String type;
 
 }

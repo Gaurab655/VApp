@@ -1,6 +1,6 @@
 package VApp.VApp.service;
 
-import VApp.VApp.dto.requestDto.RegisterAndAccountDto;
+import VApp.VApp.dto.requestDto.CreateAccountDto;
 import VApp.VApp.entity.Account;
 import VApp.VApp.entity.User;
 import VApp.VApp.exception.BankException;
@@ -22,15 +22,15 @@ public class UserAndAccountService {
     private final ModelMapper modelMapper;
 
 
-    public ResponseEntity<String> newUserAndAccount(RegisterAndAccountDto registerAndAccountDto) throws BankException {
-        if (userRepository.existsByEmail(registerAndAccountDto.getEmail())) {
+    public ResponseEntity<String> newUserAndAccount(CreateAccountDto createAccountDto) throws BankException {
+        if (userRepository.existsByEmail(createAccountDto.getEmail())) {
             throw new BankException("Enter different email", HttpStatus.BAD_REQUEST);
         }
-        User user = this.modelMapper.map(registerAndAccountDto, User.class);
+        User user = this.modelMapper.map(createAccountDto, User.class);
 
-        user.setPassword(passwordEncoder.encode(registerAndAccountDto.getPassword()));
+        user.setPassword(passwordEncoder.encode(createAccountDto.getPassword()));
 
-        Account account = this.modelMapper.map(registerAndAccountDto, Account.class);
+        Account account = this.modelMapper.map(createAccountDto, Account.class);
 
         account.setUser(user);
         user.setAccount(account);

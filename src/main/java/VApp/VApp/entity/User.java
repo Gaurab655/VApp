@@ -18,9 +18,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
     private String email;
-
     private String password;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)

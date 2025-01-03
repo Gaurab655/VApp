@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
-public class AdminTransactionDto {
+public class TransactionDto {
     private int id;
     private LocalDateTime dateTime;
     private String transactionType;
@@ -20,10 +20,9 @@ public class AdminTransactionDto {
     private double totalAmount;
     private String status;
     private Long sendingAccount;
-
     private BankAccount beneficiaryAccount;
 
-    public AdminTransactionDto(Transaction transaction) {
+    public TransactionDto(Transaction transaction) {
         this.id = transaction.getId();
         this.dateTime = transaction.getDateTime();
         this.transactionType = transaction.getTransactionType();
