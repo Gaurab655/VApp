@@ -1,13 +1,17 @@
 package VApp.VApp.dto.requestDto;
+
 import VApp.VApp.entity.BankAccount;
 import VApp.VApp.entity.Transaction;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @NoArgsConstructor
-public class AdminTransactionDto {
+public class TransactionDto {
     private int id;
     private LocalDateTime dateTime;
     private String transactionType;
@@ -16,10 +20,9 @@ public class AdminTransactionDto {
     private double totalAmount;
     private String status;
     private Long sendingAccount;
-
     private BankAccount beneficiaryAccount;
 
-    public AdminTransactionDto(Transaction transaction) {
+    public TransactionDto(Transaction transaction) {
         this.id = transaction.getId();
         this.dateTime = transaction.getDateTime();
         this.transactionType = transaction.getTransactionType();
@@ -27,7 +30,7 @@ public class AdminTransactionDto {
         this.serviceCharge = transaction.getServiceCharge();
         this.totalAmount = transaction.getTotalAmount();
         this.status = transaction.getStatus();
-        this.sendingAccount=transaction.getSenderAccount();
+        this.sendingAccount = transaction.getSenderAccount();
 
         if (transaction.getBeneficiaryAccount() != null) {
             this.beneficiaryAccount = new BankAccount(transaction.getBeneficiaryAccount());

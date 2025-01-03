@@ -24,7 +24,7 @@ public class UserResponseDto {
     public static UserResponseDto fromEntity(User user, ModelMapper modelMapper) {
         Account account = user.getAccount();
         UserResponseDto userDto = modelMapper.map(user, UserResponseDto.class);
-        AccountResponseDto accountDto =  modelMapper.map(account, AccountResponseDto.class);
+        AccountResponseDto accountDto = modelMapper.map(account, AccountResponseDto.class);
 
         userDto.setAccountInformation(accountDto);
 

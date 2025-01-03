@@ -10,11 +10,12 @@ import org.springframework.context.annotation.Bean;
 public class VAppApplication {
 
     public static void main(String[] args) {
-		SpringApplication.run(VAppApplication.class, args);
-	}
-	@Bean
-	public ModelMapper modelMapper(){
-		return new ModelMapper();
+        SpringApplication.run(VAppApplication.class, args);
+    }
+
+    @Bean
+    public ModelMapper modelMapper() {
+        return new ModelMapper();
     }
 
 }

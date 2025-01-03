@@ -6,10 +6,12 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @Setter
-public class BankException extends Exception{
+public class BankException extends Exception {
     private HttpStatus status;
-    public BankException(String message,HttpStatus status){
+
+    public BankException(String message, HttpStatus status) {
         super(message);
         this.status = status;
     }
+
 }

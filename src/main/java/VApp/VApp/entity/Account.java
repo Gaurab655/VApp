@@ -1,8 +1,12 @@
 package VApp.VApp.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.math.BigDecimal;
 
 @Entity
 @Getter
@@ -19,11 +23,12 @@ public class Account {
     private Long accountNumber;
 
     private String fullName;
-    private double balance;
+
+    private BigDecimal balance;
+
     private Integer pin;
 
     @OneToOne
     @JoinColumn(name = "user_id")
-    @JsonIgnore
     private User user;
 }

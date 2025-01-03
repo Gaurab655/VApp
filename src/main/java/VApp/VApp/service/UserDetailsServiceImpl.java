@@ -1,4 +1,5 @@
 package VApp.VApp.service;
+
 import VApp.VApp.entity.User;
 import VApp.VApp.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,13 +19,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(()-> new UsernameNotFoundException("user not found with email "+email));
+                .orElseThrow(() -> new UsernameNotFoundException("user not found with email " + email));
 
-            return org.springframework.security.core.userdetails.User.builder()
-                    .username(user.getEmail())
-                    .password(user.getPassword())
-                    .roles(String.valueOf(user.getRole()))
-                    .build();
+        return org.springframework.security.core.userdetails.User.builder()
+                .username(user.getEmail())
+                .password(user.getPassword())
+                .roles(String.valueOf(user.getRole()))
+                .build();
     }
 }
 

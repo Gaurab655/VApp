@@ -11,13 +11,13 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TransferBalanceDto {
-    @NotNull
+    @NotNull(message = "Enter account number")
     private Long accountNumber;
-    @NotNull
-    @PositiveOrZero(message = "Balance cannot be negative")
-    private double balance;
-    @NotNull
-    @Min(value = 1000, message = "PIN must be at least 1000")
-    @Max(value = 9999, message = "PIN must be at most 9999")
+    @NotNull(message = "Insert balance")
+    @Positive(message = "Insert Valid Balance")
+    private Double balance;
+    @NotNull(message = "Enter pin")
+    @Min(value = 1000, message = "pin must be of 4 digit")
+    @Max(value = 9999, message = "pin must be of 4 digit")
     private Integer pin;
 }

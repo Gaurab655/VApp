@@ -1,8 +1,12 @@
 package VApp.VApp.dto.requestDto;
 
 import VApp.VApp.enums.ServiceChargeType;
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter
@@ -10,10 +14,16 @@ import lombok.*;
 @NoArgsConstructor
 
 public class ServiceChargeDto {
-    @NotNull
-    private String amountRange;
-    @NotNull
-    private double discount;
+    @Column(name = "min_amount")
+    @NotNull(message = "Insert min-Amount")
+    private double minAmount;
+    @Column(name = "max_amount")
+    @NotNull(message = "Insert max-Amount")
+    private Double maxAmount;
+    @NotNull(message = "Insert amount")
+    private double charge;
+    @NotNull(message = "Insert amount")
+    private Double discount;
     @NotNull
     private ServiceChargeType type;
 }
