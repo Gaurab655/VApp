@@ -49,7 +49,7 @@ public class GlobalExceptionHandler {
 
             if (targetType.isEnum()) {
                 String validValues = Arrays.stream(targetType.getEnumConstants())
-                        .map(Object::toString)
+                        .map(object -> object.toString())
                         .collect(Collectors.joining(", "));
                 String errorMessage = String.format("Invalid value. Accepted values for '%s': [%s].",
                         targetType.getSimpleName(), validValues);
@@ -59,5 +59,4 @@ public class GlobalExceptionHandler {
         String errorMessage = "Enter valid Input \n" + e.getMessage();
         return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
     }
-
 }

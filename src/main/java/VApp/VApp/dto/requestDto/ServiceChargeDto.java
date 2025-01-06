@@ -17,13 +17,14 @@ public class ServiceChargeDto {
     @Column(name = "min_amount")
     @NotNull(message = "Insert min-Amount")
     private double minAmount;
+
     @Column(name = "max_amount")
     @NotNull(message = "Insert max-Amount")
     private Double maxAmount;
+
     @NotNull(message = "Insert amount")
     private double charge;
-    @NotNull(message = "Insert amount")
-    private Double discount;
+
     @NotNull
     private ServiceChargeType type;
 }

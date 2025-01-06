@@ -31,7 +31,7 @@ public class AccountService {
         Account userAccount = userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("user not found", HttpStatus.NOT_FOUND)).getAccount();
 
         if (!userAccount.getPin().equals(debitCreditDto.getPin())) {
-            return new ResponseEntity<>("Please enter valid pin", HttpStatus.UNPROCESSABLE_ENTITY);
+            return new ResponseEntity<>( "Invalid PIN. Please provide the correct PIN to proceed.", HttpStatus.UNPROCESSABLE_ENTITY);
         }
         BigDecimal updatedBalance = userAccount.getBalance().add(BigDecimal.valueOf(debitCreditDto.getBalance()));
         userAccount.setBalance(updatedBalance);

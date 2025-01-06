@@ -2,24 +2,24 @@ package VApp.VApp.dto.responseDto;
 
 import VApp.VApp.entity.Account;
 import VApp.VApp.entity.User;
-import VApp.VApp.enums.ServiceChargeType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.modelmapper.ModelMapper;
 
-import java.util.List;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+
 public class UserResponseDto {
     private int id;
+    private String role;
     private String email;
-    private List<ServiceChargeType> roles;
     private AccountResponseDto accountInformation;
+
 
     public static UserResponseDto fromEntity(User user, ModelMapper modelMapper) {
         Account account = user.getAccount();
