@@ -23,9 +23,7 @@ public class ServiceCharge {
     @Column(name = "max_amount")
     private double maxAmount;
 
-
     private double charge;
-
 
     private String type;
 

@@ -20,12 +20,16 @@ public class CreateAccountDto {
     @Email(message = "Insert valid email")
     @NotNull(message = "please insert your email")
     private String email;
+
     @NotNull(message = "please insert your password")
     private String password;
+
     @NotNull(message = "please Insert your full name")
     private String fullName;
+
     @PositiveOrZero(message = "Balance cannot be negative")
     private double balance;
+
     @NotNull(message = "Insert pin")
     @Min(value = 1000, message = "PIN must be a 4-digit number")
     @Max(value = 9999, message = "PIN must be a 4-digit number")

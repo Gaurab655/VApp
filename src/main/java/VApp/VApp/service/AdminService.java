@@ -39,7 +39,6 @@ public class AdminService {
 
     public List<UserResponseDto> getUsers() {
         List<User> users = userRepository.findAll();
-        List<UserResponseDto> result = users.stream().map((user) -> UserResponseDto.fromEntity(user, modelMapper)).toList();
-        return result;
+        return users.stream().map((user) -> UserResponseDto.fromEntity(user, modelMapper)).toList();
     }
 }
