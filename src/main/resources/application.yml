@@ -1,11 +1,3 @@
-#spring.application.name=VApp
-#spring.datasource.url=jdbc:postgresql://localhost:5432/VApp
-#spring.datasource.username=postgres
-#spring.datasource.password=password
-#spring.jpa.hibernate.ddl-auto=update
-#spring.datasource.driver-class-name=org.postgresql.Driver
-#server.port=8080
-
 spring:
   application:
     name: VApp
@@ -20,6 +12,3 @@ spring:
     hibernate:
       ddl-auto: update
       show-sql: true
-
-
-
