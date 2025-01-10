@@ -27,7 +27,7 @@ public class AccountServiceImpl implements AccountService {
     private final UserRepository userRepository;
 
     @Override
-    public ResponseEntity<String> creditAccount(DebitCreditRequestDto debitCreditRequestDto){
+    public ResponseEntity<String> creditAccount(DebitCreditRequestDto debitCreditRequestDto) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
         AccountEntity userAccountEntity = userRepository.findByEmail(email).getAccount();
@@ -66,15 +66,15 @@ public class AccountServiceImpl implements AccountService {
         String email = authentication.getName();
 
         UserEntity existingUserEntity = userRepository.findByEmail(email);
-        AccountEntity senderAccountEntity = existingUserEntity.getAccount();
+        AccountEntity senderAccount = existingUserEntity.getAccount();
         Long receiverAccountNumber = transferBalanceRequestDto.getAccountNumber();
 
         AccountEntity receiverAccountEntity = accountRepository.findByAccountNumber(receiverAccountNumber);
-        if (senderAccountEntity.equals(receiverAccountEntity)) {
+        if (senderAccount.equals(receiverAccountEntity)) {
             throw new BankException("same account number! Enter different account number", HttpStatus.BAD_REQUEST);
         }
         BigDecimal receiverBalance = receiverAccountEntity.getBalance();
-        if (!senderAccountEntity.getPin().equals(transferBalanceRequestDto.getPin())) {
+        if (!senderAccount.getPin().equals(transferBalanceRequestDto.getPin())) {
             return new ResponseEntity<>("Pin not valid", HttpStatus.UNPROCESSABLE_ENTITY);
         }
 
@@ -83,7 +83,7 @@ public class AccountServiceImpl implements AccountService {
         ServiceChargeEntity serviceChargeEntity = serviceChargeRepository.findByAmountRange(sendingBalance).orElseThrow(() -> new BankException("Cannot complete the transaction", HttpStatus.INTERNAL_SERVER_ERROR));
         double serviceCharge = serviceChargeEntity.getCharge();
 
-        if (senderAccountEntity.getBalance().compareTo(BigDecimal.valueOf(sendingBalance + serviceCharge)) < 0) {
+        if (senderAccount.getBalance().compareTo(BigDecimal.valueOf(sendingBalance + serviceCharge)) < 0) {
             return new ResponseEntity<>("Insufficient balance in sender's account.", HttpStatus.BAD_REQUEST);
         }
 
@@ -92,10 +92,10 @@ public class AccountServiceImpl implements AccountService {
         }
         TransactionEntity transactionEntity = new TransactionEntity();
         try {
-            BigDecimal sentBalance = senderAccountEntity.getBalance()
+            BigDecimal sentBalance = senderAccount.getBalance()
                     .subtract(BigDecimal.valueOf(transferBalanceRequestDto.getBalance()))
                     .subtract(BigDecimal.valueOf(serviceCharge));
-            senderAccountEntity.setBalance(sentBalance);
+            senderAccount.setBalance(sentBalance);
 
             BigDecimal receiveBalance = receiverBalance.add(BigDecimal.valueOf(transferBalanceRequestDto.getBalance()));
             receiverAccountEntity.setBalance(receiveBalance);
@@ -105,7 +105,7 @@ public class AccountServiceImpl implements AccountService {
             bankAccountEntity.setBalance(totalServiceCharge);
             bankAccountRepository.save(bankAccountEntity);
 
-            accountRepository.save(senderAccountEntity);
+            accountRepository.save(senderAccount);
             accountRepository.save(receiverAccountEntity);
             transactionEntity.setStatus("success");
             return new ResponseEntity<>("Transfer success with service charge : " + serviceCharge, HttpStatus.OK);
@@ -120,7 +120,7 @@ public class AccountServiceImpl implements AccountService {
             transactionEntity.setServiceCharge(serviceCharge);
             transactionEntity.setTotalAmount(BigDecimal.valueOf(transferBalanceRequestDto.getBalance() + serviceCharge));
             transactionEntity.setReceiverAccount(receiverAccountEntity);
-            transactionEntity.setSenderAccount(senderAccountEntity.getAccountNumber());
+            transactionEntity.setSenderAccount(senderAccount.getAccountNumber());
             transactionRepository.save(transactionEntity);
         }
     }

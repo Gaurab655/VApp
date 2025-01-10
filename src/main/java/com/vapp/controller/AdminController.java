@@ -28,13 +28,13 @@ public class AdminController {
         return adminService.insertServiceCharge(serviceChargeRequestDto);
     }
 
-    @DeleteMapping("/delete/{id}")
-    public void deleteAccount(@PathVariable int id) throws BankException {
-        adminService.deleteUser(id);
-    }
-
     @GetMapping("/check-transaction")
     public ResponseEntity<?> checkTransaction() throws BankException {
         return ResponseEntity.ok(transactionService.transactionDetails());
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public void deleteAccount(@PathVariable int id) throws BankException {
+        adminService.deleteUser(id);
     }
 }
