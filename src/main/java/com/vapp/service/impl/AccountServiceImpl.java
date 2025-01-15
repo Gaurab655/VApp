@@ -52,7 +52,7 @@ public class AccountServiceImpl implements AccountService {
 
         BigDecimal existingBalance = accountEntity.getBalance();
         if (existingBalance.compareTo(BigDecimal.valueOf(debitCreditRequestDto.getBalance())) < 0)
-            throw new BankException("You don't have enough balance", HttpStatus.BAD_REQUEST);
+            throw new BankException("You don't have enough balance", HttpStatus.UNPROCESSABLE_ENTITY);
 
         BigDecimal updatedBalance = existingBalance.subtract(BigDecimal.valueOf(debitCreditRequestDto.getBalance()));
         accountEntity.setBalance(updatedBalance);
@@ -71,9 +71,12 @@ public class AccountServiceImpl implements AccountService {
 
         AccountEntity receiverAccountEntity = accountRepository.findByAccountNumber(receiverAccountNumber);
         if (senderAccount.equals(receiverAccountEntity)) {
-            throw new BankException("same account number! Enter different account number", HttpStatus.BAD_REQUEST);
+            throw new BankException("Same account number! Enter different account number", HttpStatus.BAD_REQUEST);
         }
-        BigDecimal receiverBalance = receiverAccountEntity.getBalance();
+        if (receiverAccountEntity == null) {
+            throw new BankException("Receiver account does not match", HttpStatus.UNPROCESSABLE_ENTITY);
+
+        }
         if (!senderAccount.getPin().equals(transferBalanceRequestDto.getPin())) {
             return new ResponseEntity<>("Pin not valid", HttpStatus.UNPROCESSABLE_ENTITY);
         }
@@ -85,7 +88,7 @@ public class AccountServiceImpl implements AccountService {
         double serviceCharge = serviceChargeEntity.getCharge();
 
         if (senderAccount.getBalance().compareTo(BigDecimal.valueOf(sendingBalance + serviceCharge)) < 0) {
-            return new ResponseEntity<>("Insufficient balance in sender's account.", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Insufficient balance in sender's account.", HttpStatus.UNPROCESSABLE_ENTITY);
         }
 
         if (serviceChargeEntity.getType() == ServiceChargeTypeEnum.PERCENT) {
@@ -93,15 +96,14 @@ public class AccountServiceImpl implements AccountService {
         }
         TransactionEntity transactionEntity = new TransactionEntity();
         try {
-            BigDecimal sentBalance = senderAccount.getBalance()
-                    .subtract(BigDecimal.valueOf(transferBalanceRequestDto.getBalance()))
+            BigDecimal sentBalance = senderAccount.getBalance().subtract(BigDecimal.valueOf(transferBalanceRequestDto.getBalance()))
                     .subtract(BigDecimal.valueOf(serviceCharge));
             senderAccount.setBalance(sentBalance);
-
+            BigDecimal receiverBalance = receiverAccountEntity.getBalance();
             BigDecimal receiveBalance = receiverBalance.add(BigDecimal.valueOf(transferBalanceRequestDto.getBalance()));
             receiverAccountEntity.setBalance(receiveBalance);
 
-            BankAccountEntity bankAccountEntity = bankAccountRepository.findById(1).orElseThrow(() -> new BankException("user not found exception", HttpStatus.NOT_FOUND));
+            BankAccountEntity bankAccountEntity = bankAccountRepository.findById(1).orElseThrow(() -> new BankException("system Error", HttpStatus.INTERNAL_SERVER_ERROR));
             BigDecimal totalServiceCharge = bankAccountEntity.getBalance().add(BigDecimal.valueOf(serviceCharge));
             bankAccountEntity.setBalance(totalServiceCharge);
             bankAccountRepository.save(bankAccountEntity);
@@ -111,12 +113,12 @@ public class AccountServiceImpl implements AccountService {
             transactionEntity.setStatus("success");
             return new ResponseEntity<>("Transfer success with service charge : " + serviceCharge, HttpStatus.OK);
         } catch (Exception e) {
-            transactionEntity.setStatus("failed");
+            transactionEntity.setStatus("Failed");
             System.out.println(e.getMessage());
-            return new ResponseEntity<>("no enough balance", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Transaction failed: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         } finally {
             transactionEntity.setDateTime(LocalDateTime.now());
-            transactionEntity.setTransactionType("transfer");
+            transactionEntity.setTransactionType("Transfer");
             transactionEntity.setAmount(transferBalanceRequestDto.getBalance());
             transactionEntity.setServiceCharge(serviceCharge);
             transactionEntity.setTotalAmount(BigDecimal.valueOf(transferBalanceRequestDto.getBalance() + serviceCharge));
