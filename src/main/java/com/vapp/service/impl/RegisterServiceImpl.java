@@ -25,7 +25,7 @@ public class RegisterServiceImpl implements RegisterService {
     @Override
     public ResponseEntity<String> newUserAndAccount(CreateAccountRequestDto createAccountRequestDto) throws BankException {
         if (userRepository.existsByEmail(createAccountRequestDto.getEmail())) {
-            throw new BankException("Enter different email", HttpStatus.BAD_REQUEST);
+            throw new BankException("Enter different email", HttpStatus.UNPROCESSABLE_ENTITY);
         }
         UserEntity userEntity = this.modelMapper.map(createAccountRequestDto, UserEntity.class);
 

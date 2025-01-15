@@ -45,14 +45,4 @@ public class AdminServiceImpl implements AdminService {
         List<UserEntity> userEntities = userRepository.findAll();
         return userEntities.stream().map(user -> modelMapper.map(user, UserResponseDto.class)).toList();
     }
-
-    @Override
-    public void deleteUser(int id) throws BankException {
-       boolean isExists = userRepository.existsById(id);
-       if (isExists){
-           userRepository.deleteById(id);
-       }else {
-           throw new BankException("User not found with this id",HttpStatus.UNPROCESSABLE_ENTITY);
-       }
-    }
 }

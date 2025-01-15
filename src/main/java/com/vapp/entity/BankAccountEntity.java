@@ -21,11 +21,4 @@ public class BankAccountEntity {
     private String name;
     private BigDecimal balance;
     private Long accountNumber;
-
-    public BankAccountEntity(AccountEntity accountEntity) {
-        this.id = accountEntity.getId();
-        this.accountNumber = accountEntity.getAccountNumber();
-        this.name = accountEntity.getFullName();
-        this.balance = accountEntity.getBalance();
-    }
 }
