@@ -12,6 +12,4 @@ public interface AdminService {
 
     List<UserResponseDto> getUsers();
 
-    void deleteUser(int id) throws BankException;
-
 }

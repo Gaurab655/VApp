@@ -1,6 +1,7 @@
 package com.vapp.controller;
 
 import com.vapp.dto.requestDto.ServiceChargeRequestDto;
+import com.vapp.dto.requestDto.TransactionRequestDto;
 import com.vapp.dto.responseDto.UserResponseDto;
 import com.vapp.exception.BankException;
 import com.vapp.service.AdminService;
@@ -29,12 +30,7 @@ public class AdminController {
     }
 
     @GetMapping("/check-transaction")
-    public ResponseEntity<?> checkTransaction() throws BankException {
+    public ResponseEntity<Object> checkTransaction() throws BankException {
         return ResponseEntity.ok(transactionService.transactionDetails());
-    }
-
-    @DeleteMapping("/delete/{id}")
-    public void deleteAccount(@PathVariable int id) throws BankException {
-        adminService.deleteUser(id);
     }
 }

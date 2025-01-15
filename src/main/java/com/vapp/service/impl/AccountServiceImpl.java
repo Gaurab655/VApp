@@ -80,7 +80,8 @@ public class AccountServiceImpl implements AccountService {
 
         double sendingBalance = transferBalanceRequestDto.getBalance();
 
-        ServiceChargeEntity serviceChargeEntity = serviceChargeRepository.findByAmountRange(sendingBalance).orElseThrow(() -> new BankException("Cannot complete the transaction", HttpStatus.INTERNAL_SERVER_ERROR));
+        ServiceChargeEntity serviceChargeEntity = serviceChargeRepository.findByAmountRange(sendingBalance)
+                .orElseThrow(() -> new BankException("Cannot complete the transaction", HttpStatus.INTERNAL_SERVER_ERROR));
         double serviceCharge = serviceChargeEntity.getCharge();
 
         if (senderAccount.getBalance().compareTo(BigDecimal.valueOf(sendingBalance + serviceCharge)) < 0) {

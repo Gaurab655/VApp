@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface AccountRepository extends JpaRepository<AccountEntity, Integer> {
 
-   AccountEntity findByAccountNumber(Long accountNumber);
+    AccountEntity findByAccountNumber(Long accountNumber);
 
     @Query("SELECT MAX(a.accountNumber) FROM AccountEntity a")
     Optional<Long> findMaxAccountNumber();
