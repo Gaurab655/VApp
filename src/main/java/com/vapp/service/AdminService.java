@@ -3,13 +3,13 @@ package com.vapp.service;
 import com.vapp.dto.requestDto.ServiceChargeRequestDto;
 import com.vapp.dto.responseDto.UserResponseDto;
 import com.vapp.exception.BankException;
+import com.vapp.model.ApiResponse;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
 public interface AdminService {
-    ResponseEntity<ServiceChargeRequestDto> insertServiceCharge(ServiceChargeRequestDto serviceChargeRequestDto) throws BankException;
+    ApiResponse insertServiceCharge(ServiceChargeRequestDto serviceChargeRequestDto) throws BankException;
 
-    List<UserResponseDto> getUsers();
-
+    ApiResponse getUsers();
 }

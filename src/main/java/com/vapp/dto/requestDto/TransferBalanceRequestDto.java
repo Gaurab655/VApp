@@ -7,6 +7,8 @@ import jakarta.validation.constraints.Positive;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 public class TransferBalanceRequestDto {
@@ -15,7 +17,7 @@ public class TransferBalanceRequestDto {
 
     @NotNull(message = "Insert balance")
     @Positive(message = "Insert Valid Balance")
-    private Double balance;
+    private BigDecimal balance;
 
     @NotNull(message = "Enter pin")
     @Min(value = 1000, message = "pin must be of 4 digit")

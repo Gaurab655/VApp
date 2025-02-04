@@ -1,18 +1,16 @@
 package com.vapp.service;
 
-import org.springframework.http.ResponseEntity;
 import com.vapp.dto.requestDto.DebitCreditRequestDto;
 import com.vapp.dto.requestDto.TransferBalanceRequestDto;
 import com.vapp.exception.BankException;
+import com.vapp.model.ApiResponse;
 
 public interface AccountService {
-    ResponseEntity<String> creditAccount(DebitCreditRequestDto debitCreditRequestDto) throws Exception;
+    ApiResponse creditAccount(DebitCreditRequestDto debitCreditRequestDto) throws BankException;
 
-    ResponseEntity<String> debitAccount(DebitCreditRequestDto debitCreditRequestDto) throws Exception;
+    ApiResponse debitAccount(DebitCreditRequestDto debitCreditRequestDto) throws BankException;
 
-    ResponseEntity<String> transferAmount(TransferBalanceRequestDto transferBalanceRequestDto) throws BankException;
+    ApiResponse transferAmount(TransferBalanceRequestDto transferBalanceRequestDto) throws BankException;
 
-    ResponseEntity<String> checkBalance();
-
-
+    ApiResponse checkBalance();
 }

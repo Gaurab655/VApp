@@ -21,13 +21,12 @@ public class TransactionEntity {
     private int id;
     private LocalDateTime dateTime;
     private String transactionType;
-    private double amount;
-    private double serviceCharge;
+    private BigDecimal amount;
+    private BigDecimal serviceCharge;
     private BigDecimal totalAmount;
     private String status;
     private Long senderAccount;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     private AccountEntity receiverAccount;
-
 }

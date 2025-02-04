@@ -1,12 +1,13 @@
 package com.vapp.service.impl;
 
+import com.vapp.builder.ServiceResponseBuilder;
 import com.vapp.dto.requestDto.TransactionRequestDto;
 import com.vapp.entity.BankAccountEntity;
+import com.vapp.model.ApiResponse;
 import com.vapp.repository.TransactionRepository;
 import com.vapp.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,10 +19,9 @@ public class TransactionServiceImpl implements TransactionService {
     private final ModelMapper modelMapper;
 
     @Override
-    public ResponseEntity<Object> transactionDetails() {
+    public ApiResponse transactionDetails() {
         List<TransactionRequestDto> transactions = transactionRepository.findAll()
-                .stream()
-                .map(transactionEntity -> {
+                .stream().map(transactionEntity -> {
                     TransactionRequestDto dto = this.modelMapper.map(transactionEntity, TransactionRequestDto.class);
                     dto.setSendingAccount(transactionEntity.getSenderAccount());
                     if (transactionEntity.getReceiverAccount() != null) {
@@ -31,6 +31,6 @@ public class TransactionServiceImpl implements TransactionService {
                     return dto;
                 })
                 .toList();
-        return ResponseEntity.ok(transactions);
+        return ServiceResponseBuilder.buildSuccessBuilder("Transaction list", transactions);
     }
 }

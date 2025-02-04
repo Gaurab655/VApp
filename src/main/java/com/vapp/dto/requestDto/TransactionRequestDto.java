@@ -14,7 +14,7 @@ public class TransactionRequestDto {
     private LocalDateTime dateTime;
     private String transactionType;
     private BigDecimal amount;
-    private double serviceCharge;
+    private BigDecimal serviceCharge;
     private BigDecimal totalAmount;
     private String status;
     private Long sendingAccount;

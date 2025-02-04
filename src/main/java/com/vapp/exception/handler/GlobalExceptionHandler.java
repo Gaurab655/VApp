@@ -1,6 +1,7 @@
 package com.vapp.exception.handler;
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import com.vapp.exception.BankException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -10,7 +11,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
-import com.vapp.exception.BankException;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(BankException.class)
-    public ResponseEntity<?> handleUserNotFoundException(BankException e) {
+    public ResponseEntity<?> handleBankException(BankException e) {
         return new ResponseEntity<>(e.getMessage(), e.getStatus());
     }
 

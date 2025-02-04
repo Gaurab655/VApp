@@ -1,10 +1,11 @@
 package com.vapp.service;
 
 
-import org.springframework.http.ResponseEntity;
 import com.vapp.dto.requestDto.CreateAccountRequestDto;
 import com.vapp.exception.BankException;
+import com.vapp.model.ApiResponse;
+import org.springframework.http.ResponseEntity;
 
 public interface RegisterService {
-    ResponseEntity<String> newUserAndAccount(CreateAccountRequestDto createAccountRequestDto) throws BankException;
+    ApiResponse newUserAndAccount(CreateAccountRequestDto createAccountRequestDto) throws BankException;
 }

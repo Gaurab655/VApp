@@ -5,18 +5,20 @@ import lombok.Getter;
 import lombok.Setter;
 import com.vapp.enums.ServiceChargeTypeEnum;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 public class ServiceChargeRequestDto {
 
     @NotNull(message = "Insert min-Amount")
-    private double minAmount;
+    private BigDecimal minAmount;
 
     @NotNull(message = "Insert max-Amount")
-    private Double maxAmount;
+    private BigDecimal maxAmount;
 
     @NotNull(message = "Insert amount")
-    private double charge;
+    private BigDecimal charge;
 
     @NotNull
     private ServiceChargeTypeEnum type;

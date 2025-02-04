@@ -1,18 +1,19 @@
 package com.vapp.service.impl;
 
-import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
+import com.vapp.builder.ServiceResponseBuilder;
 import com.vapp.dto.requestDto.CreateAccountRequestDto;
 import com.vapp.entity.AccountEntity;
 import com.vapp.entity.UserEntity;
 import com.vapp.exception.BankException;
+import com.vapp.model.ApiResponse;
 import com.vapp.repository.AccountRepository;
 import com.vapp.repository.UserRepository;
 import com.vapp.service.RegisterService;
+import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -23,7 +24,7 @@ public class RegisterServiceImpl implements RegisterService {
     private final ModelMapper modelMapper;
 
     @Override
-    public ResponseEntity<String> newUserAndAccount(CreateAccountRequestDto createAccountRequestDto) throws BankException {
+    public ApiResponse newUserAndAccount(CreateAccountRequestDto createAccountRequestDto) throws BankException {
         if (userRepository.existsByEmail(createAccountRequestDto.getEmail())) {
             throw new BankException("Enter different email", HttpStatus.UNPROCESSABLE_ENTITY);
         }
@@ -40,7 +41,7 @@ public class RegisterServiceImpl implements RegisterService {
         accountEntity.setAccountNumber(nextAccountNumber);
 
         userRepository.save(userEntity);
-        return new ResponseEntity<>("Account created Successfully", HttpStatus.CREATED);
+        return ServiceResponseBuilder.buildSuccessBuilder("Account created");
     }
 
     private Long generateNextAccountNumber() {

@@ -1,16 +1,13 @@
 package com.vapp.controller;
 
 import com.vapp.dto.requestDto.ServiceChargeRequestDto;
-import com.vapp.dto.requestDto.TransactionRequestDto;
-import com.vapp.dto.responseDto.UserResponseDto;
 import com.vapp.exception.BankException;
+import com.vapp.model.ApiResponse;
 import com.vapp.service.AdminService;
 import com.vapp.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/admin")
@@ -20,17 +17,17 @@ public class AdminController {
     private final AdminService adminService;
 
     @GetMapping("/all-users")
-    public ResponseEntity<List<UserResponseDto>> getAllUsers() {
+    public ResponseEntity<ApiResponse> getAllUsers() {
         return ResponseEntity.ok(adminService.getUsers());
     }
 
     @PostMapping
-    public ResponseEntity<ServiceChargeRequestDto> serviceCharges(@RequestBody ServiceChargeRequestDto serviceChargeRequestDto) throws BankException {
-        return adminService.insertServiceCharge(serviceChargeRequestDto);
+    public ResponseEntity<ApiResponse> serviceCharges(@RequestBody ServiceChargeRequestDto serviceChargeRequestDto) throws BankException {
+        return ResponseEntity.ok(adminService.insertServiceCharge(serviceChargeRequestDto));
     }
 
     @GetMapping("/check-transaction")
-    public ResponseEntity<Object> checkTransaction() throws BankException {
+    public ResponseEntity<ApiResponse> checkTransaction() throws BankException {
         return ResponseEntity.ok(transactionService.transactionDetails());
     }
 }

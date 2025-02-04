@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import com.vapp.enums.ServiceChargeTypeEnum;
 
+import java.math.BigDecimal;
+
 @Entity
 @Getter
 @Setter
@@ -19,12 +21,12 @@ public class ServiceChargeEntity {
     private int id;
 
     @Column(name = "min_amount")
-    private double minAmount;
+    private BigDecimal minAmount;
 
     @Column(name = "max_amount")
-    private double maxAmount;
+    private BigDecimal maxAmount;
 
-    private double charge;
+    private BigDecimal charge;
 
     @Enumerated(EnumType.STRING)
     private ServiceChargeTypeEnum type;

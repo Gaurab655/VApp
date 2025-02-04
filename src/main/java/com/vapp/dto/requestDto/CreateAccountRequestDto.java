@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 import com.vapp.enums.RolesEnum;
 
+import java.math.BigDecimal;
+
 
 @Getter
 @Setter
@@ -23,7 +25,7 @@ public class CreateAccountRequestDto {
     private String fullName;
 
     @PositiveOrZero(message = "Balance cannot be negative")
-    private double balance;
+    private BigDecimal balance;
 
     @NotNull(message = "Insert pin")
     @Min(value = 1000, message = "PIN must be a 4-digit number")

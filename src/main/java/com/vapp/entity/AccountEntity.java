@@ -21,7 +21,6 @@ public class AccountEntity {
 
     @Column(unique = true)
     private Long accountNumber;
-
     private String fullName;
     private BigDecimal balance;
     private Integer pin;

@@ -1,11 +1,11 @@
 package com.vapp.entity;
 
+import com.vapp.enums.RolesEnum;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import com.vapp.enums.RolesEnum;
 
 @Entity
 @Getter
@@ -23,6 +23,6 @@ public class UserEntity {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private AccountEntity account;
 
-   @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.STRING)
     private RolesEnum role;
 }

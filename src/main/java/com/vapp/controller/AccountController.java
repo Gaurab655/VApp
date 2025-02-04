@@ -2,6 +2,8 @@ package com.vapp.controller;
 
 import com.vapp.dto.requestDto.DebitCreditRequestDto;
 import com.vapp.dto.requestDto.TransferBalanceRequestDto;
+import com.vapp.exception.BankException;
+import com.vapp.model.ApiResponse;
 import com.vapp.service.AccountService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -15,22 +17,22 @@ public class AccountController {
     private final AccountService accountService;
 
     @PostMapping("/credit")
-    public ResponseEntity<String> credit(@Valid @RequestBody DebitCreditRequestDto debitCreditRequestDto) throws Exception {
-        return accountService.creditAccount(debitCreditRequestDto);
+    public ResponseEntity<ApiResponse> credit(@Valid @RequestBody DebitCreditRequestDto debitCreditRequestDto) throws BankException {
+        return ResponseEntity.ok(accountService.creditAccount(debitCreditRequestDto));
     }
 
     @PostMapping("/debit")
-    public ResponseEntity<String> debit(@Valid @RequestBody DebitCreditRequestDto debitCreditRequestDto) throws Exception {
-        return accountService.debitAccount(debitCreditRequestDto);
+    public ResponseEntity<ApiResponse> debit(@Valid @RequestBody DebitCreditRequestDto debitCreditRequestDto) throws BankException {
+        return ResponseEntity.ok(accountService.debitAccount(debitCreditRequestDto));
     }
 
     @PostMapping("/transferAmount")
-    public ResponseEntity<String> transfer(@Valid @RequestBody TransferBalanceRequestDto transferBalanceRequestDto) throws Exception {
-        return accountService.transferAmount(transferBalanceRequestDto);
+    public ResponseEntity<ApiResponse> transfer(@Valid @RequestBody TransferBalanceRequestDto transferBalanceRequestDto) throws BankException {
+        return ResponseEntity.ok(accountService.transferAmount(transferBalanceRequestDto));
     }
 
     @GetMapping("/check-balance")
-    public ResponseEntity<String> checkBalance() {
-        return accountService.checkBalance();
+    public ResponseEntity<ApiResponse> checkBalance() {
+        return ResponseEntity.ok(accountService.checkBalance());
     }
 }

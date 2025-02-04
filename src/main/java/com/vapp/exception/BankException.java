@@ -10,10 +10,15 @@ public class BankException extends Exception {
     private HttpStatus status;
     private String message;
 
-    public BankException(String message, HttpStatus status) {
+    public BankException(String message ,HttpStatus status) {
         super(message);
-        this.message = message;
+        this.message = "";
         this.status = status;
+    }
+    public BankException(String message){
+        super(message);
+        this.message=message;
+        this.status=HttpStatus.INTERNAL_SERVER_ERROR;
     }
 
 }

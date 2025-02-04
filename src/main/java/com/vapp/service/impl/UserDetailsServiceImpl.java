@@ -1,11 +1,11 @@
 package com.vapp.service.impl;
 
+import com.vapp.entity.UserEntity;
+import com.vapp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
-import com.vapp.entity.UserEntity;
-import com.vapp.repository.UserRepository;
 
 @Component
 @RequiredArgsConstructor

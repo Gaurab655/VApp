@@ -2,6 +2,7 @@ package com.vapp.controller;
 
 import com.vapp.dto.requestDto.CreateAccountRequestDto;
 import com.vapp.exception.BankException;
+import com.vapp.model.ApiResponse;
 import com.vapp.service.RegisterService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,7 @@ public class CreateAccountController {
     private final RegisterService registerService;
 
     @PostMapping("/newUser")
-    public ResponseEntity<String> createUser(@Valid @RequestBody CreateAccountRequestDto createAccountRequestDto) throws BankException {
-        return registerService.newUserAndAccount(createAccountRequestDto);
+    public ResponseEntity<ApiResponse> createUser(@Valid @RequestBody CreateAccountRequestDto createAccountRequestDto) throws BankException {
+        return ResponseEntity.ok( registerService.newUserAndAccount(createAccountRequestDto));
     }
 }
